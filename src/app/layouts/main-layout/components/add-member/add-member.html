@@ -1,3 +1,58 @@
 <section>
-  <div class="content"></div>
+  <div class="content">
+    <button type="button" class="close btn p-0  border-0" (click)="fnCloseAddMember.emit()">
+      <i class="cross bi bi-x-square-fill text-danger"></i>
+    </button>
+    <div class="d-flex align-items-center justify-content-center">
+      <h4 class="">¿Nuevo Socio?</h4>
+    </div>
+    <div class="container d-flex flex-column justify-content-center">
+      <form action="" [formGroup]="addMemberForm" (ngSubmit)="guardar()">
+        <div class="mt-4">
+          <input formControlName="nombre" class="form-control" type="text" placeholder="Nombre "  >
+        </div>
+
+        <div>
+          <input formControlName="apellidos"  class="form-control" type="text" placeholder="Apellidos ">
+        </div>
+        <div>
+          <input formControlName="email" class="form-control" type="email" placeholder="Correo electrónico ">
+        </div>
+
+        <div>
+          <input formControlName="telefono" class="form-control" type="text" placeholder="Teléfono ">
+        </div>
+
+        <div>
+          <input formControlName="dni" class="form-control" type="text" placeholder="DNI/NIE ">
+        </div>
+
+        <div class="socio-status-container">
+          <label class=" ">Estado Socio:</label>
+
+          <div class="botones-grupo d-flex gap-5 mt-2">
+            <input type="radio" id="activo" name="estado-socio" value="activo" class="status-input">
+            <label for="activo" class="status-label label-activo">Activo</label>
+
+            <input type="radio" id="no-activo" name="estado_socio" value="no-activo" class="status-input" checked >
+            <label for="no-activo" class="status-label label-no-activo">No Activo</label>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="custom-label">Tipo de socio</label>
+          <select name="tipo_socio" class="custom-select">
+            <option value="profesor">Profesor</option>
+            <option value="alumno" selected>Alumno</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </div>
+        <div class="d-flex align-items-end justify-content-center mt-4 mb-2 ">
+          <button class="save btn text-white">Guardar</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
 </section>
