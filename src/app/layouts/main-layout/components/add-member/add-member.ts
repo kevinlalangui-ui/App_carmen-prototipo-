@@ -1,6 +1,8 @@
 import { Component, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import{AuthService} from '../../../../core/services/usuarios/auth.service';
+import{EmailValidator} from '../../../../core/validators/email.validator';
+import{DniValidator} from '../../../../core/validators/dni.validator';
 import {NgClass} from '@angular/common';
 import { submit } from '@angular/forms/signals';
 @Component({
@@ -19,9 +21,9 @@ export class AddMember {
     this.addMemberForm = this.formBuilder.group({
       "nombre": ["", Validators.required],
       "apellidos": ["", Validators.required],
-      "email": ["", [Validators.required]],
+      "email": ["", [Validators.required,EmailValidator]],
       "telefono": ["", [Validators.required]],
-      "dni":["", [Validators.required]],
+      "dni":["", [Validators.required ,DniValidator]],
       estado_socio: ["no-activo", Validators.required], // 'no-activo' será el valor inicial
       tipo_socio: ["alumno", Validators.required]
 

@@ -10,13 +10,34 @@
       <form action="" [formGroup]="addMemberForm" (ngSubmit)="guardar()">
         <div class="mt-4">
           <input formControlName="nombre" class="form-control" type="text" placeholder="Nombre "  >
+          @if (addMemberForm.get("nombre")?.touched && addMemberForm.get("nombre")?.errors?.['required']) {
+            <div class="form-text text-end text-danger">El nombre es obligatorio</div>
+          }
         </div>
 
         <div>
           <input formControlName="apellidos"  class="form-control" type="text" placeholder="Apellidos ">
+          @if (addMemberForm.get("apellidos")?.touched && addMemberForm.get("apellidos")?.errors?.['required']) {
+            <div class="form-text text-end text-danger">Los apellidos son obligatorios</div>
+          }
         </div>
+
         <div>
           <input formControlName="email" class="form-control" type="email" placeholder="Correo electrónico ">
+          @if (addMemberForm.get("email")?.touched) {
+            @if (addMemberForm.get("email")?.errors?.['required']) {
+              <div class="form-text text-end text-danger">El correo es obligatorio</div>
+            }
+            @if (addMemberForm.get("email")?.errors?.['email']) {
+              <div class="form-text text-end text-danger">Correo no válido</div>
+            }
+            @if (addMemberForm.get("email")?.errors?.['extension']) {
+              <div class="form-text text-end text-danger">Solo aceptamos gmail y hotmail</div>
+            }
+            @if (addMemberForm.get("email")?.errors?.['customEmail']) {
+              <div class="form-text text-end text-danger">Correo no válido</div>
+            }
+          }
         </div>
 
         <div>
@@ -24,7 +45,15 @@
         </div>
 
         <div>
-          <input formControlName="dni" class="form-control" type="text" placeholder="DNI/NIE ">
+          <input formControlName="dni" class="form-control" type="text" placeholder="DNI/NIE">
+          @if (addMemberForm.get("dni")?.touched) {
+            @if (addMemberForm.get("dni")?.errors?.['required']) {
+              <div class="form-text text-end text-danger">El DNI es obligatorio</div>
+            }
+            @if (addMemberForm.get("dni")?.errors?.['extension']) {
+              <div class="form-text text-end text-danger">Formato incorrecto (ej: 12345678Z)</div>
+            }
+          }
         </div>
 
         <div class="socio-status-container">
@@ -38,6 +67,7 @@
             <label for="no-activo" class="status-label label-no-activo">No Activo</label>
           </div>
         </div>
+
 
         <div class="field-group">
           <label class="custom-label">Tipo de socio</label>

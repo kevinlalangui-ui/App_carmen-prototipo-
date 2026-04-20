@@ -38,37 +38,47 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>01</td>
-        <td>Felipe Carlos</td>
-        <td>Guzmán Segundo</td>
-        <td>FelipeCarlosGuzman@gmail.com</td>
-        <td>+34 652 25 35 97</td>
-        <td>
-          <div>52316377W</div>
-          <small class="text-muted d-block" style="font-size: 0.7rem;">DNI</small>
-        </td>
 
-        <td>
-          <div class="d-flex align-items-center gap-2">
-            <div style="width: 20px; height: 20px; background-color: #6CAD6A; border-radius: 50%;"></div>
-            <div>
-              <div class="fw-bold" style="line-height: 1;">Activo</div>
-              <small class="text-muted" style="font-size: 0.7rem;">05/01/2027</small>
-            </div>
-          </div>
-        </td>
+        @for (socio of socios(); track socio.id) {
+          <tr>
+            <td>{{ socio.id }}</td>
+            <td>{{ socio.nombre }}</td>
+            <td>{{ socio.apellido }}</td>
+            <td>{{ socio.correo }}</td>
+            <td>{{ socio.telefono }}</td>
+            <td>
+              <div>{{ socio.dni }}</div>
+              <small class="text-muted d-block" style="font-size: 0.7rem;">DNI</small>
+            </td>
 
-        <td>Si</td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div [style.background-color]="socio.estado ? '#6CAD6A' : '#dc3545'" style="width: 20px; height: 20px; border-radius: 50%;"></div>
+                <div>
+                  <div class="fw-bold" style="line-height: 1;">{{ socio.estado ? 'Activo' : 'Inactivo' }}</div>
+                  <small class="text-muted" style="font-size: 0.7rem;">05/01/2027</small>
+                </div>
+              </div>
+            </td>
 
-        <td>vW2O8a9z7</td>
+            <td>{{ socio.tipoSocio }}</td>
 
-        <td class="text-end">
-          <button class="btn btn-link text-dark p-0">
-            <i class="bi bi-three-dots-vertical"></i>
-          </button>
-        </td>
-      </tr>
+            <td>vW2O8a9z7</td>
+
+            <td class="text-end">
+              <button class="btn btn-link text-dark p-0">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="10" class="text-center py-4 text-muted">
+              No hay socios registrados.
+            </td>
+          </tr>
+        }
+
       </tbody>
     </table>
   </div>

@@ -9,6 +9,14 @@ export const routes: Routes = [
   {
     path:'info',
     loadComponent:()=>import("./layouts/main-layout/components/info-member/info-member").then(c=>c.InfoMember),
+  },
+  {
+    path:'not-found',
+    loadComponent:()=>import("./features/not-found/not-found").then(c=>c.NotFound),
+  },
+  {
+    path:'add-member',
+    loadComponent:()=>import("./layouts/main-layout/components/add-member/add-member").then(c=>c.AddMember),
   }
 ];
 
