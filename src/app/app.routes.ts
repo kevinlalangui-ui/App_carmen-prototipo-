@@ -17,6 +17,12 @@ export const routes: Routes = [
   {
     path:'add-member',
     loadComponent:()=>import("./layouts/main-layout/components/add-member/add-member").then(c=>c.AddMember),
+  },
+  {path: '**', redirectTo: 'page-not-found', pathMatch: 'full'},
+
+  {
+    path: 'page-not-found',
+    loadComponent: () => import("./features/not-found/not-found").then(c => c.NotFound),
   }
 ];
 

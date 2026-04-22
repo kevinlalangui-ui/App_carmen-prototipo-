@@ -27,7 +27,6 @@ export class AddMember {
       estado_socio: ["no-activo", Validators.required], // 'no-activo' será el valor inicial
       tipo_socio: ["alumno", Validators.required]
 
-
     })
   }
 
@@ -46,5 +45,6 @@ export class AddMember {
       }
 
     })
+
   }
 }
