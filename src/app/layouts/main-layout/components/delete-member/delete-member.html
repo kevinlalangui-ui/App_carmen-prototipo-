@@ -1,0 +1,18 @@
+<div class="header-row">
+  <h3 mat-dialog-title>¿Eliminar miembro?</h3>
+</div>
+
+<mat-dialog-content>
+  <p>Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar este miembro?</p>
+  <div class="confirm-input">
+    <label>Escribe <strong>eliminar</strong> para confirmar:</label>
+    <input [(ngModel)]="confirmText" placeholder="eliminar" />
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button class="btn-eliminar" (click)="confirm()" [disabled]="confirmText !== 'eliminar'">
+    Eliminar
+  </button>
+</mat-dialog-actions>

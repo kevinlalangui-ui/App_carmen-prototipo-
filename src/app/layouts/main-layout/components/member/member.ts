@@ -1,29 +1,33 @@
-import { Component, Inject, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
+import { Component, inject, Inject } from '@angular/core';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-add-member',
+  selector: 'app-member',
   standalone: true,
   imports: [
-    MatDialogModule, MatButtonModule, MatInputModule,
-    MatFormFieldModule, MatRadioModule, MatIconModule,
-    ReactiveFormsModule, CommonModule
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatRadioModule,
   ],
-  templateUrl: './add-member.html',
-  styleUrl: './add-member.scss'
+  templateUrl: './member.html',
+  styleUrl: './member.scss',
 })
-export class AddMember {
-  private dialogRef = inject(MatDialogRef<AddMember>);
+export class Member {
+  private dialogRef = inject(MatDialogRef<Member>);
   private fb = inject(FormBuilder);
 
-  form: FormGroup;
+  form : FormGroup;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({

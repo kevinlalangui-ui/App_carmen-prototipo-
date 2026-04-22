@@ -5,7 +5,7 @@
 
 <div class="title">
   <mat-icon>info</mat-icon>
-  <h2>Modificar Socio</h2>
+  <h2>Nuevo Socio</h2>
 </div>
 
 <mat-dialog-content [formGroup]="form">
@@ -38,7 +38,6 @@
     </div>
   </div>
 </mat-dialog-content>
-
 <mat-dialog-actions align="end">
   <button
     type="button"
@@ -51,7 +50,7 @@
   </button>
 
   <button class="btn-activate" (click)="guardar()">
-    {{ esEdicion() ? 'Actualizar' : 'Guardar' }}
+    {{ esEdicion() ? 'Guardar' : 'Guardar' }}
   </button>
 
 </mat-dialog-actions>

@@ -1,17 +1,51 @@
 #fondo{
   width: 100vw;
   min-height: 100vh;
-  background-color: #EEF7EA;
+  background-color: #EEF7EA ;
 }
-.boton-1{
-  background-color: #F9DD6B;
+.boton-1 {
+  background-color: #CFDCEB;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
-.boton-2{
-  background-color: #6DA0FF;
+
+.boton-2 {
+  background-color: #CBF2BD;;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.90rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
-.boton-3{
+
+.boton-3 {
   background-color: #FA6164;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
+
+.boton-4 {
+  background-color: transparent;
+  color: #333;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+.boton-5{
+  background-color: #CFDCEB;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+   }
 .caja-buscador{
   background-color: white;
   border:1px solid black;
@@ -24,5 +58,91 @@
   background-color: transparent;
 }
 thead,th{
-  background-color:#65B865 ;
+  background-color:#C0EBDD ;
+}
+.header {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.mat-mdc-menu-item i {
+  font-size: 0.9rem;
+}
+.buscador-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.caja-buscador {
+  background-color: white;
+  border: 1px solid black;
+  padding: 3px 5px;
+  border-radius: 5px;
+}
+
+.buscador {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-expandir {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+  color: #333;
+  font-size: 0.85rem;
+}
+
+.filtros-panel {
+  display: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  width: 280px;
+
+  &.abierto {
+    display: flex;
+  }
+
+  mat-chip {
+    cursor: pointer;
+    background-color: #e0e0e0;
+    font-size: 0.8rem;
+  }
+
+  .chip-activo {
+    background-color: #1a6496 !important;
+    color: white !important;
+  }
+}
+.fila-seleccionada td {
+  background-color: #6AB0EB;
+}
+
+input[type="checkbox"] {
+  accent-color: #1D9E75;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.fab-añadir {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background-color: #1D9E75 !important;
+  color: white !important;
+  z-index: 1000;
 }

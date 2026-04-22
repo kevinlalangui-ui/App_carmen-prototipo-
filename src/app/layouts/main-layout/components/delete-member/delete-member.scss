@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  padding: 8px;
+}
+
+h3 {
+  color: #c0392b;
+  font-weight: 700;
+  margin: 0;
+}
+
+p {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.confirm-input {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  input {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    outline: none;
+
+    &:focus {
+      border-color: #c0392b;
+    }
+  }
+}
+
+.btn-eliminar {
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #e0a09a;
+    cursor: not-allowed;
+  }
+}

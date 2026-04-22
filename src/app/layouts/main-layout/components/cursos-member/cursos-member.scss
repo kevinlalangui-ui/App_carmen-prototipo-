@@ -1,0 +1,63 @@
+:host {
+  display: block;
+  padding: 8px;
+}
+
+h3 {
+  font-weight: 700;
+  color: #1a3a5c;
+}
+
+.seccion {
+  margin-bottom: 16px;
+}
+
+.seccion-titulo {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1a6496;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+}
+
+.vacio {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.curso-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  label {
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+}
+
+.curso-activo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #e8f5e9;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+}
+
+.btn-quitar {
+  background: none;
+  border: none;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 0.9rem;
+}

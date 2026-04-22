@@ -1,0 +1,15 @@
+<h3 mat-dialog-title>Nuevo curso</h3>
+
+<mat-dialog-content>
+  <div class="campo">
+    <label>Nombre del curso</label>
+    <input [(ngModel)]="nombreCurso" placeholder="Ej: Ingles" />
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button class="btn-guardar" (click)="confirm()" [disabled]="!nombreCurso.trim()">
+    Guardar
+  </button>
+</mat-dialog-actions>
