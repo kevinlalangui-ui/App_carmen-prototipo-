@@ -5,17 +5,25 @@ import{SociosService} from '../../core/services/socios/socios.service';
 import { NgClass } from '@angular/common';
 import{AlertasService} from '../../core/utils/alertas.service';
 
+
 interface SociosInterface {
-  id:string;
-  nombre: string;
-  apellido: string;
-  correo: string;
-  telefono: string;
-  dni: string;
-  estado: boolean;
-  imagen: string;
-  tipoSocio: string;
+  id: string;
+  informacionPersonalModel: {
+    identificacion: string;
+    nombres: string;
+    apellidos: string;
+    correo: string;
+    telefono: string;
+    contrasena: string | null;
+  };
+  estado_Socio: string;
+  tipo_socio: string;
+  ultimo_pago: string | null;
+  fecha_vencimiento: string | null;
+  historial_pagos: string[];
+  actividades: Record<string, any>;
 }
+
 @Component({
   selector: 'app-main-layout',
   imports: [AddMember, DeleteMember,NgClass],

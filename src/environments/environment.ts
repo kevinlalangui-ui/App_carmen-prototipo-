@@ -1,7 +1,8 @@
 export const environment = {
   production: false,
-  apiURL: "http://localhost:8000/api",
+  apiURL: 'http://nihill19.tech:8080/api/v1',
 }
+
 
 
 

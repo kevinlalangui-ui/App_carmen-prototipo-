@@ -42,28 +42,40 @@
         @for (socio of socios(); track socio.id) {
           <tr>
             <td>{{ socio.id }}</td>
-            <td>{{ socio.nombre }}</td>
-            <td>{{ socio.apellido }}</td>
-            <td>{{ socio.correo }}</td>
-            <td>{{ socio.telefono }}</td>
+
+            <td>{{ socio.informacionPersonalModel.nombres }}</td>
+
+            <td>{{ socio.informacionPersonalModel.apellidos }}</td>
+
+            <td>{{ socio.informacionPersonalModel.correo }}</td>
+
+            <td>{{ socio.informacionPersonalModel.telefono }}</td>
+
             <td>
-              <div>{{ socio.dni }}</div>
+              <div>{{ socio.informacionPersonalModel.identificacion }}</div>
               <small class="text-muted d-block" style="font-size: 0.7rem;">DNI</small>
             </td>
 
             <td>
               <div class="d-flex align-items-center gap-2">
-                <div [style.background-color]="socio.estado ? '#6CAD6A' : '#dc3545'" style="width: 20px; height: 20px; border-radius: 50%;"></div>
+                <div
+                  [style.background-color]="socio.estado_Socio === 'activo' ? '#6CAD6A' : '#dc3545'"
+                  style="width: 20px; height: 20px; border-radius: 50%;">
+                </div>
                 <div>
-                  <div class="fw-bold" style="line-height: 1;">{{ socio.estado ? 'Activo' : 'Inactivo' }}</div>
-                  <small class="text-muted" style="font-size: 0.7rem;">05/01/2027</small>
+                  <div class="fw-bold" style="line-height: 1;">
+                    {{ socio.estado_Socio === 'activo' ? 'Activo' : 'Inactivo' }}
+                  </div>
+                  <small class="text-muted" style="font-size: 0.7rem;">
+                    {{ socio.fecha_vencimiento ?? 'Sin fecha' }}
+                  </small>
                 </div>
               </div>
             </td>
 
-            <td>{{ socio.tipoSocio }}</td>
+            <td>{{ socio.tipo_socio }}</td>
 
-            <td>vW2O8a9z7</td>
+            <td>{{ socio.informacionPersonalModel.contrasena ?? '—' }}</td>
 
             <td class="text-end">
               <button class="btn btn-link text-dark p-0">

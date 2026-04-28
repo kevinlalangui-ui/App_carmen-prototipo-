@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import {environment} from "../../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import { environment } from "../../../../environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+
 @Injectable({
   providedIn: 'root',
 })
 export class SociosService {
   private URL = environment.apiURL;
 
-  constructor(
-    private http: HttpClient,
-  ) {
-  }
+  constructor(private http: HttpClient) {}
 
   getSocios(): Observable<any> {
-    return this.http.get<any>(`${this.URL}/all-socios/`);
-
+    return this.http.get<any>(`${this.URL}/socio/all`);
   }
 
+  guardar(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.URL}/socio/add`, payload);
+  }
 }
