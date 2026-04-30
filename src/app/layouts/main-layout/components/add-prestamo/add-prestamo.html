@@ -1,0 +1,27 @@
+<h3 mat-dialog-title>➕ Nueva herramienta</h3>
+
+<mat-dialog-content>
+  <div class="campo">
+    <label>Nombre de la herramienta</label>
+    <input [(ngModel)]="nombre" placeholder="Ej: martillo, taladro" />
+  </div>
+
+  <div class="campo">
+    <label>Descripción</label>
+    <textarea
+      [(ngModel)]="descripcion"
+      placeholder="Ej: descripcion de la herramienta"
+      rows="3"
+    ></textarea>
+  </div>
+
+  <div class="campo">
+    <label>Ubicación / sitio guardado</label>
+    <input [(ngModel)]="sitioGuardado" placeholder="Ej: estante 3, caja 2" />
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button class="btn-guardar" (click)="confirm()" [disabled]="!nombre.trim()">Guardar</button>
+</mat-dialog-actions>

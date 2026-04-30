@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  background-color: #f5f0e8;
+  border-radius: 12px;
+  padding: 16px 24px 24px;
+}
+
+h3 {
+  font-weight: 700;
+  color: #1a3a5c;
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+
+  label {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+  }
+
+  input,
+  textarea {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    outline: none;
+    font-family: inherit;
+
+    &:focus {
+      border-color: #1a6496;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: 8px;
+}
+
+.btn-guardar {
+  background-color: #1a6496;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #a0bcd4;
+    cursor: not-allowed;
+  }
+}

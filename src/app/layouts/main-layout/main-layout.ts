@@ -12,6 +12,7 @@ import { Member } from './components/member/member';
 import { DeleteMember } from './components/delete-member/delete-member';
 import { AddCurso } from './components/add-curso/add-curso';
 import { CursosMember } from './components/cursos-member/cursos-member';
+import { PrestamosListComponent } from './components/prestamos-list/prestamos-list';
 
 interface Socio {
   id: string;
@@ -171,5 +172,8 @@ export class MainLayout {
   }
   onCorreo() {
     console.log('Correo', this.selectedSocios);
+  }
+  onPrestamos() {
+    this.router.navigate(['/prestamos']);
   }
 }

@@ -2,21 +2,31 @@
   <div class="header">
     <img src="header.png" alt="hero" />
   </div>
-    <button mat-fab color="primary" class="fab-añadir" (click)="openMember()">
-      <mat-icon>add</mat-icon>
-    </button>
-    <button class="boton-5 btn" (click)="openAddCurso()">
-      <i class="bi bi-plus-circle"></i> Nuevo curso
-    </button>
+  <button mat-fab color="primary" class="fab-añadir" (click)="openMember()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button class="boton-5 btn" (click)="openAddCurso()">
+    <i class="bi bi-plus-circle"></i> Nuevo curso
+  </button>
   <div class="container d-flex justify-content-between align-items-center">
     <div class="d-flex gap-3 align-items-center">
       <button class="boton-1 btn" [disabled]="selectedSocios.length === 0">
         <i class="bi bi-journal-plus"></i> Mandar correo
       </button>
-      <button class="boton-2 btn" [disabled]="selectedSocios.length === 0" mat-menu-item (click)="onCurso()">
+      <button
+        class="boton-2 btn"
+        [disabled]="selectedSocios.length === 0"
+        mat-menu-item
+        (click)="onCurso()"
+      >
         <i class="bi bi-pencil-fill"></i> Curso
       </button>
-      <button class="boton-3 btn" [disabled]="selectedSocios.length === 0" mat-menu-item (click)="onEliminar()">
+      <button
+        class="boton-3 btn"
+        [disabled]="selectedSocios.length === 0"
+        mat-menu-item
+        (click)="onEliminar()"
+      >
         <i class="bi bi-trash3-fill"></i> Eliminar
       </button>
       <button class="boton-4 btn" (click)="goToRegister()">Cerrar sesion</button>
@@ -24,14 +34,22 @@
     <div class="buscador-wrapper">
       <div class="caja-buscador d-flex gap-1 align-items-center">
         <i class="bi bi-search"></i>
-        <input class="buscador" type="text" placeholder="Buscar....">
+        <input class="buscador" type="text" placeholder="Buscar...." />
         <button class="btn-expandir" (click)="toggleFiltros()">
-          <i class="bi" [class.bi-chevron-down]="!filtrosAbiertos" [class.bi-chevron-up]="filtrosAbiertos"></i>
+          <i
+            class="bi"
+            [class.bi-chevron-down]="!filtrosAbiertos"
+            [class.bi-chevron-up]="filtrosAbiertos"
+          ></i>
         </button>
       </div>
       <div class="filtros-panel" [class.abierto]="filtrosAbiertos">
         <mat-chip-set>
-          <mat-chip *ngFor="let filtro of filtros" [class.chip-activo]="filtro.activo" (click)="toggleChip(filtro)">
+          <mat-chip
+            *ngFor="let filtro of filtros"
+            [class.chip-activo]="filtro.activo"
+            (click)="toggleChip(filtro)"
+          >
             {{ filtro.label }}
           </mat-chip>
         </mat-chip-set>
@@ -43,11 +61,13 @@
     <table class="table">
       <thead>
         <tr>
-          <th style="width: 40px;">
-            <input type="checkbox"
+          <th style="width: 40px">
+            <input
+              type="checkbox"
               [checked]="allSelected"
               [indeterminate]="someSelected"
-              (change)="toggleAll($event)" />
+              (change)="toggleAll($event)"
+            />
           </th>
           <th>ID socio</th>
           <th>Nombres</th>
@@ -73,15 +93,17 @@
           <td>{{ socio.tel }}</td>
           <td>
             <div>{{ socio.dni }}</div>
-            <small class="text-muted d-block" style="font-size: 0.7rem;">DNI</small>
+            <small class="text-muted d-block" style="font-size: 0.7rem">DNI</small>
           </td>
           <td>
             <div class="d-flex align-items-center gap-2">
-              <div style="width:20px;height:20px;border-radius:50%;"
-                [style.background-color]="socio.estado === 'Activo' ? '#6CAD6A' : '#aaa'"></div>
+              <div
+                style="width: 20px; height: 20px; border-radius: 50%"
+                [style.background-color]="socio.estado === 'Activo' ? '#6CAD6A' : '#aaa'"
+              ></div>
               <div>
-                <div class="fw-bold" style="line-height:1;">{{ socio.estado }}</div>
-                <small class="text-muted" style="font-size:0.7rem;">{{ socio.fechaVenc }}</small>
+                <div class="fw-bold" style="line-height: 1">{{ socio.estado }}</div>
+                <small class="text-muted" style="font-size: 0.7rem">{{ socio.fechaVenc }}</small>
               </div>
             </div>
           </td>
@@ -92,11 +114,24 @@
               <i class="bi bi-three-dots-vertical"></i>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="openAddMember(socio)"><i class="bi bi-pencil-fill me-2"></i> Modificar</button>
-              <button mat-menu-item (click)="onEliminar()"><i class="bi bi-trash3-fill me-2"></i> Eliminar</button>
-              <button mat-menu-item (click)="onCurso()"><i class="bi bi-book me-2"></i> Curso</button>
-              <button mat-menu-item (click)="onPagos()"><i class="bi bi-credit-card me-2"></i> Pagos</button>
-              <button mat-menu-item (click)="onCorreo()"><i class="bi bi-envelope me-2"></i> Mandar correo</button>
+              <button mat-menu-item (click)="openAddMember(socio)">
+                <i class="bi bi-pencil-fill me-2"></i> Modificar
+              </button>
+              <button mat-menu-item (click)="onEliminar()">
+                <i class="bi bi-trash3-fill me-2"></i> Eliminar
+              </button>
+              <button mat-menu-item (click)="onCurso()">
+                <i class="bi bi-book me-2"></i> Curso
+              </button>
+              <button mat-menu-item (click)="onPagos()">
+                <i class="bi bi-credit-card me-2"></i> Pagos
+              </button>
+              <button mat-menu-item (click)="onPrestamos()">
+                <i class="bi bi-tools me-2"></i> Préstamos
+              </button>
+              <button mat-menu-item (click)="onCorreo()">
+                <i class="bi bi-envelope me-2"></i> Mandar correo
+              </button>
             </mat-menu>
           </td>
         </tr>
