@@ -1,0 +1,89 @@
+:host {
+  display: block;
+  background-color: #f5f0e8;
+  border-radius: 12px;
+  padding: 16px 24px 24px;
+}
+
+h3 {
+  font-weight: 700;
+  color: #1a3a5c;
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+}
+
+.tab-content {
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+  }
+
+  select,
+  input,
+  textarea {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: white;
+
+    &:focus {
+      border-color: #1a6496;
+      outline: none;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.btn-prestar {
+  background-color: #1a6496;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+
+  &:disabled {
+    background-color: #a0bcd4;
+    cursor: not-allowed;
+  }
+}
+
+.btn-devolver {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+
+  &:disabled {
+    background-color: #a0bcd4;
+    cursor: not-allowed;
+  }
+}
+
+mat-dialog-actions {
+  padding-top: 16px;
+  margin-top: 8px;
+}

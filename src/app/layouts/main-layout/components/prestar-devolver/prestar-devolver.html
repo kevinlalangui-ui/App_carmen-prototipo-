@@ -1,0 +1,74 @@
+<h3 mat-dialog-title>Prestar / devolver herramienta</h3>
+
+<mat-dialog-content>
+  <mat-tab-group>
+    <!-- Pestaña Prestar -->
+    <mat-tab label="Prestar">
+      <div class="tab-content">
+        <div class="campo">
+          <label>Herramienta</label>
+          <select [(ngModel)]="herramientaSeleccionadaId">
+            <option [value]="null">-- Selecciona --</option>
+            <option *ngFor="let tool of disponibles" [value]="tool.id">
+              {{ tool.nombre }} - {{ tool.descripcion }}
+            </option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label>Prestado a</label>
+          <input [(ngModel)]="entidadAjena" placeholder="Nombre o entidad" />
+        </div>
+
+        <div class="campo">
+          <label>Anotaciones</label>
+          <textarea
+            [(ngModel)]="anotacionesPrestamo"
+            rows="2"
+            placeholder="Estado de la herramienta"
+          ></textarea>
+        </div>
+
+        <button
+          class="btn-prestar"
+          (click)="prestar()"
+          [disabled]="!herramientaSeleccionadaId || !entidadAjena"
+        >
+          Confirmar préstamo
+        </button>
+      </div>
+    </mat-tab>
+
+    <!-- Pestaña Devolver -->
+    <mat-tab label="Devolver">
+      <div class="tab-content">
+        <div class="campo">
+          <label>Herramienta</label>
+          <select [(ngModel)]="herramientaDevueltaId">
+            <option [value]="null">-- Selecciona --</option>
+            <option *ngFor="let tool of prestados" [value]="tool.id">
+              {{ tool.nombre }} - {{ tool.descripcion }}
+            </option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label>Anotaciones</label>
+          <textarea
+            [(ngModel)]="anotacionesDevolucion"
+            rows="2"
+            placeholder="Cómo se devuelve, si tiene daños"
+          ></textarea>
+        </div>
+
+        <button class="btn-devolver" (click)="devolver()" [disabled]="!herramientaDevueltaId">
+          Confirmar devolución
+        </button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+</mat-dialog-actions>

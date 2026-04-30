@@ -16,6 +16,6 @@ export class CursoService {
   ]);
 
   addCurso(nombre: string) {
-    this.cursos.update(lista => [...lista, { id: this.nextId++, nombre }]);
+    this.cursos.update((lista) => [...lista, { id: this.nextId++, nombre }]);
   }
 }

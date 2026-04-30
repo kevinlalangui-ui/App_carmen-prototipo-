@@ -1,0 +1,90 @@
+<div class="prestamos-container">
+  <div class="botones">
+    <button class="btn-add" (click)="abrirAddPrestamo()">Añadir herramienta</button>
+    <button class="btn-prestar" (click)="abrirPrestarDevolver()">Prestar / Devolver</button>
+  </div>
+
+  <mat-tab-group>
+    <mat-tab label="Todas">
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Herramienta</th>
+              <th>Descripción</th>
+              <th>Ubicación</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of todas">
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.descripcion }}</td>
+              <td>{{ item.sitioGuardado }}</td>
+              <td>
+                <span
+                  [class.prestado]="item.prestadoActual"
+                  [class.disponible]="!item.prestadoActual"
+                >
+                  {{ item.prestadoActual ? 'Prestado' : 'Disponible' }}
+                </span>
+              </td>
+              <td><button class="btn-eliminar" (click)="eliminar(item.id)">Eliminar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Prestadas">
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Herramienta</th>
+              <th>Descripción</th>
+              <th>Ubicación</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of prestadas">
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.descripcion }}</td>
+              <td>{{ item.sitioGuardado }}</td>
+              <td><span class="prestado">Prestado</span></td>
+              <td><button class="btn-eliminar" (click)="eliminar(item.id)">Eliminar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Disponibles">
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Herramienta</th>
+              <th>Descripción</th>
+              <th>Ubicación</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of disponibles">
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.descripcion }}</td>
+              <td>{{ item.sitioGuardado }}</td>
+              <td><span class="disponible">Disponible</span></td>
+              <td><button class="btn-eliminar" (click)="eliminar(item.id)">Eliminar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

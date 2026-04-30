@@ -1,0 +1,83 @@
+:host {
+  display: block;
+  background-color: #f5f0e8;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.botones {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.btn-add,
+.btn-prestar {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-add {
+  background-color: #1a6496;
+  color: white;
+}
+
+.btn-prestar {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.tabla-wrapper {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+table {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background-color: #1a3a5c;
+  color: white;
+}
+
+.prestado {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.disponible {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.btn-eliminar {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
