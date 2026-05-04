@@ -176,4 +176,10 @@ export class MainLayout {
   onPrestamos() {
     this.router.navigate(['/prestamos']);
   }
+  onGastos() {
+    this.router.navigate(['/gastos']);
+  }
+  onIngresos() {
+    this.router.navigate(['/ingresos']);
+  }
 }

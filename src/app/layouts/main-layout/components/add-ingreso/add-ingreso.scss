@@ -1,0 +1,56 @@
+h3 {
+  font-weight: 700;
+  color: #1a3a5c;
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+
+  label {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+  }
+
+  input {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+
+    &:focus {
+      border-color: #1a6496;
+      outline: none;
+    }
+  }
+}
+
+.error {
+  color: #e53935;
+  font-size: 0.7rem;
+  margin-top: 4px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.btn-guardar {
+  background-color: #1a6496;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #a0bcd4;
+    cursor: not-allowed;
+  }
+}

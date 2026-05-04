@@ -1,0 +1,46 @@
+.ingresos-container {
+  padding: 20px;
+  background: #f5f0e8;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    color: #1a3a5c;
+  }
+}
+
+.btn-add {
+  background-color: #1a6496;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.tabla-wrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+table {
+  width: 100%;
+}

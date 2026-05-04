@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { PrestamosListComponent } from './layouts/main-layout/components/prestamos-list/prestamos-list';
+import { ListaGastosComponent } from './layouts/main-layout/components/lista-gastos/lista-gastos';
+import { ListaIngresosComponent } from './layouts/main-layout/components/lista-ingresos/lista-ingresos';
 
 export const routes: Routes = [
   {
@@ -10,6 +12,14 @@ export const routes: Routes = [
   {
     path: 'prestamos',
     component: PrestamosListComponent,
+  },
+  {
+    path: 'gastos',
+    component: ListaGastosComponent,
+  },
+  {
+    path: 'ingresos',
+    component: ListaIngresosComponent,
   },
   {
     path: 'register',

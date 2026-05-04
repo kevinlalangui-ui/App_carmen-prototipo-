@@ -1,0 +1,43 @@
+<div class="ingresos-container">
+  <!-- Cabecera con título y botón -->
+  <div class="header">
+    <h2>📈 Ingresos</h2>
+    <button class="btn-add" (click)="abrirAddIngreso()">➕ Añadir ingreso</button>
+  </div>
+
+  <div class="tabla-wrapper">
+    <table mat-table [dataSource]="ingresos">
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let item">{{ item.fechaIngreso }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="descripcion">
+        <th mat-header-cell *matHeaderCellDef>Descripción</th>
+        <td mat-cell *matCellDef="let item">{{ item.descripcion }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="monto">
+        <th mat-header-cell *matHeaderCellDef>Monto</th>
+        <td mat-cell *matCellDef="let item">{{ item.monto | currency: 'EUR' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+          <button
+            class="btn-delete"
+            (click)="eliminarIngreso(item.id, item.descripcion, item.monto)"
+            matTooltip="Eliminar ingreso"
+            matTooltipPosition="above"
+          >
+            🗑️
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>
