@@ -14,7 +14,7 @@ import { AddCurso } from './components/add-curso/add-curso';
 import { CursosMember } from './components/cursos-member/cursos-member';
 import { RouterModule } from '@angular/router';
 import { SociosService } from '../../core/services/socios/socios.service';
-import { ActividadService } from '../../core/services/actividad/actividad.service';
+import { ActividadesService } from '../../core/services/actividades/actividades.service'; // <-- cambiado
 
 interface Socio {
   id: string;
@@ -48,10 +48,10 @@ interface Socio {
   styleUrl: './main-layout.scss',
 })
 export class MainLayout implements OnInit {
-  private dialog          = inject(MatDialog);
-  private router          = inject(Router);
-  private sociosService    = inject(SociosService);
-  private actividadService = inject(ActividadService);
+  private dialog             = inject(MatDialog);
+  private router             = inject(Router);
+  private sociosService      = inject(SociosService);
+  private actividadesService = inject(ActividadesService); // <-- cambiado
 
   filtrosAbiertos = false;
   sortColumn: 'nombres' | 'apellidos' | null = null;
@@ -59,7 +59,6 @@ export class MainLayout implements OnInit {
   estadoFiltro: 'todos' | 'Activo' | 'Inactivo' = 'todos';
   profesorFiltro: 'todos' | 'Si' | 'No' = 'todos';
   textoBusqueda = '';
-
 
   cargando = false;
   errorCarga: string | null = null;
@@ -77,12 +76,10 @@ export class MainLayout implements OnInit {
   socios: Socio[] = [];
   cursosDisponibles: string[] = [];
 
-
   ngOnInit(): void {
     this.cargarSocios();
     this.cargarActividades();
   }
-
 
   cargarSocios(): void {
     this.cargando = true;
@@ -102,10 +99,10 @@ export class MainLayout implements OnInit {
   }
 
   cargarActividades(): void {
-    this.actividadService.getAll().subscribe({
+    this.actividadesService.getActividades().subscribe({ // <-- cambiado
       next: (data: any[]) => {
         this.cursosDisponibles = data.flatMap((a: any) =>
-          (a.cursos ?? []).map((c: any) => c.nombreCurso)
+          (a.cursos ?? []).map((c: any) => c.nombre_curso) // <-- cambiado
         );
       },
       error: (err: any) => {
@@ -115,38 +112,36 @@ export class MainLayout implements OnInit {
   }
 
   private mapToApiSocio(s: any): any {
-  return {
-    informacionPersonalModel: {
-      nombres:        s.nombres,
-      apellidos:      s.apellidos,
-      correo:         s.correo,
-      telefono:       s.tel,
-      identificacion: s.dni,
-    },
-    tipo_socio:        s.profesor === 'Si' ? ['PROFESOR'] : ['REGULAR'],
-    cuotas:            s.cuotas ?? [],
-    fecha_vencimiento: s.fechaVenc ?? '',
-    actividades:       s.actividades ?? {},
-  };
-}
-
+    return {
+      informacion_personal_model: { // <-- cambiado
+        nombres:        s.nombres,
+        apellidos:      s.apellidos,
+        correo:         s.correo,
+        telefono:       s.tel,
+        identificacion: s.dni,
+      },
+      tipo_socio:        s.profesor === 'Si' ? ['PROFESOR'] : ['REGULAR'],
+      cuotas:            s.cuotas ?? [],
+      fecha_vencimiento: s.fechaVenc ?? '',
+      actividades:       s.actividades ?? {},
+    };
+  }
 
   private mapearSocio(s: any): Socio {
-    const info = s.informacionPersonalModel ?? {};
-
+    const info = s.informacion_personal_model ?? {}; // <-- cambiado
 
     const cursos: string[] = Object.values(s.actividades ?? {}).flatMap(
-      (a: any) => (a.cursos ?? []).map((c: any) => c.nombreCurso ?? c.id ?? '')
+      (a: any) => (a.cursos ?? []).map((c: any) => c.nombre_curso ?? c.id ?? '') // <-- cambiado
     );
 
     return {
-      id:            s.id               ?? s._id       ?? '',
-      nombres:       info.nombres        ?? '',
-      apellidos:     info.apellidos      ?? '',
-      correo:        info.correo         ?? '',
-      tel:           info.telefono       ?? '',
-      dni:           info.identificacion ?? '',
-      estado:        s.estado_Socio      ?? 'Inactivo',
+      id:        s.id               ?? s._id       ?? '',
+      nombres:   info.nombres        ?? '',
+      apellidos: info.apellidos      ?? '',
+      correo:    info.correo         ?? '',
+      tel:       info.telefono       ?? '',
+      dni:       info.identificacion ?? '',
+      estado:    s.es_activo ? 'Activo' : 'Inactivo', // <-- cambiado
       fechaVenc:     s.fecha_vencimiento ?? '',
       profesor: (Array.isArray(s.tipo_socio) ? s.tipo_socio : []).some((t: string) => t?.toLowerCase() === 'profesor') ? 'Si' : 'No',
       cursos,
@@ -154,7 +149,6 @@ export class MainLayout implements OnInit {
       selected:       false,
     };
   }
-
 
   get sociosFiltrados(): Socio[] {
     let lista = this.socios;
@@ -201,13 +195,13 @@ export class MainLayout implements OnInit {
   filtrarEstado(): void {
     this.estadoFiltro =
       this.estadoFiltro === 'todos'   ? 'Activo'   :
-      this.estadoFiltro === 'Activo'  ? 'Inactivo' : 'todos';
+        this.estadoFiltro === 'Activo'  ? 'Inactivo' : 'todos';
   }
 
   filtrarProfesor(): void {
     this.profesorFiltro =
       this.profesorFiltro === 'todos' ? 'Si'  :
-      this.profesorFiltro === 'Si'    ? 'No'  : 'todos';
+        this.profesorFiltro === 'Si'    ? 'No'  : 'todos';
   }
 
   sortBy(col: 'nombres' | 'apellidos'): void {
@@ -303,7 +297,6 @@ export class MainLayout implements OnInit {
       if (!confirmed) return;
 
       if (socio) {
-
         this.sociosService.deleteSocio(socio.id).subscribe({
           next: () => {
             this.socios = this.socios.filter((s) => s !== socio);
@@ -311,7 +304,6 @@ export class MainLayout implements OnInit {
           error: (err: any) => console.error('Error DELETE socio:', err),
         });
       } else {
-
         const seleccionados = this.socios.filter((s) => s.selected);
         let completados = 0;
 
@@ -319,7 +311,6 @@ export class MainLayout implements OnInit {
           this.sociosService.deleteSocio(s.id).subscribe({
             next: () => {
               completados++;
-
               if (completados === seleccionados.length) {
                 this.socios = this.socios.filter((x) => !x.selected);
               }
@@ -339,7 +330,7 @@ export class MainLayout implements OnInit {
     });
     dialogRef.afterClosed().subscribe((nuevoCurso: any) => {
       if (!nuevoCurso) return;
-      this.actividadService.add(nuevoCurso).subscribe({
+      this.actividadesService.addActividad(nuevoCurso).subscribe({ // <-- cambiado
         next: () => this.cargarActividades(),
         error: (err: any) => console.error('Error ADD actividad:', err),
       });
@@ -353,5 +344,4 @@ export class MainLayout implements OnInit {
   onPrestamos(): void { this.router.navigate(['/prestamos']); }
   onGastos(): void    { this.router.navigate(['/gastos']); }
   onIngresos(): void  { this.router.navigate(['/ingresos']); }
-
 }

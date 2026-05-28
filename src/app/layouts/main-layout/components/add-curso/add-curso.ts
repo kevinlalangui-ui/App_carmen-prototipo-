@@ -3,16 +3,15 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CursoService } from '../../services/curso';
 
-export interface Curso {
-  nombre: string;
+interface CursoForm {
+  nombre:      string;
   descripcion: string;
-  ubicacion: string;
-  profesor: string;
-  horario: string;
-  plazas: number | null;
-  activo: boolean;
+  ubicacion:   string;
+  profesor:    string;
+  horario:     string;
+  plazas:      number | null;
+  activo:      boolean;
 }
 
 const NUEVO_CURSO_KEY = '__nuevo__';
@@ -26,41 +25,35 @@ const NUEVO_CURSO_KEY = '__nuevo__';
 })
 export class AddCurso {
   private dialogRef = inject(MatDialogRef<AddCurso>);
-  private cursoService = inject(CursoService);
 
-  // Lista de cursos ya existentes
-  cursosExistentes: string[] = ['Aleman I', 'Ingles', 'Yoga', 'Aleman III'];
-
+  cursosExistentes: string[] = [];
   profesores: string[] = ['Laura Sánchez', 'Patricia Herrera', 'Javier Castro'];
 
-  // Valor del <select>
-  nombreSeleccionado: string = '';
+  nombreSeleccionado = '';
+  mostrarInputNuevo  = false;
+  nombreNuevo        = '';
 
-  mostrarInputNuevo: boolean = false;
-
-  nombreNuevo: string = '';
-
-  curso: Curso = {
-    nombre: '',
+  curso: CursoForm = {
+    nombre:      '',
     descripcion: '',
-    ubicacion: '',
-    profesor: '',
-    horario: '',
-    plazas: null,
-    activo: true,
+    ubicacion:   '',
+    profesor:    '',
+    horario:     '',
+    plazas:      null,
+    activo:      true,
   };
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     this.cursosExistentes = data?.cursosExistentes ?? [];
   }
 
-  onNombreChange() {
+  onNombreChange(): void {
     if (this.nombreSeleccionado === NUEVO_CURSO_KEY) {
       this.mostrarInputNuevo = true;
-      this.curso.nombre = '';
+      this.curso.nombre      = '';
     } else {
       this.mostrarInputNuevo = false;
-      this.curso.nombre = this.nombreSeleccionado;
+      this.curso.nombre      = this.nombreSeleccionado;
     }
   }
 
@@ -72,13 +65,13 @@ export class AddCurso {
     return this.nombreFinal.length > 0;
   }
 
-  confirm() {
+  confirm(): void {
     if (!this.puedeGuardar) return;
     this.curso.nombre = this.nombreFinal;
     this.dialogRef.close(this.curso);
   }
 
-  cancel() {
+  cancel(): void {
     this.dialogRef.close(false);
   }
 }

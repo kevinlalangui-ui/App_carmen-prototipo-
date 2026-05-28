@@ -9,8 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { DeleteMember } from '../delete-member/delete-member';
 import { AddCurso } from '../add-curso/add-curso';
-import { ActividadService } from '../../../../core/services/actividad/actividad.service';
+import { ActividadesService } from '../../../../core/services/actividades/actividades.service';
 
+// Interfaz local para la vista — refleja los campos que este componente necesita mostrar
 export interface Curso {
   id: string;
   nombre: string;
@@ -41,33 +42,27 @@ export interface Curso {
   ],
 })
 export class CursosComponent implements OnInit {
-  private router = inject(Router);
-  private dialog = inject(MatDialog);
-  private actividadService = inject(ActividadService);
+  private router            = inject(Router);
+  private dialog            = inject(MatDialog);
+  private actividadesService = inject(ActividadesService);
 
-  fabAbierto = false;
+  fabAbierto      = false;
   filtrosAbiertos = false;
-  textoBusqueda = '';
+  textoBusqueda   = '';
 
   filtros = [
-    { label: 'Activos', activo: false },
-    { label: 'Inactivos', activo: false },
+    { label: 'Activos',                activo: false },
+    { label: 'Inactivos',              activo: false },
     { label: 'Con plazas disponibles', activo: false },
-    { label: 'Sin plazas', activo: false },
+    { label: 'Sin plazas',             activo: false },
   ];
 
-  cursos: Curso[] = [];
+  cursos:         Curso[] = [];
   cursosFiltrados: Curso[] = [];
 
-  get selectedCursos(): Curso[] {
-    return this.cursos.filter((c) => c.selected);
-  }
-  get allSelected(): boolean {
-    return this.cursos.length > 0 && this.cursos.every((c) => c.selected);
-  }
-  get someSelected(): boolean {
-    return this.cursos.some((c) => c.selected) && !this.allSelected;
-  }
+  get selectedCursos(): Curso[] { return this.cursos.filter((c) => c.selected); }
+  get allSelected():    boolean  { return this.cursos.length > 0 && this.cursos.every((c) => c.selected); }
+  get someSelected():   boolean  { return this.cursos.some((c) => c.selected) && !this.allSelected; }
 
   toggleAll(event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
@@ -77,21 +72,21 @@ export class CursosComponent implements OnInit {
   onCheckChange(): void {}
 
   ngOnInit(): void {
-    this.actividadService.getAll().subscribe((actividades: any[]) => {
+    this.actividadesService.getActividades().subscribe((actividades: any[]) => {
       this.cursos = actividades.flatMap((a: any) =>
         (a.cursos ?? []).map((c: any) => ({
-          id: c.id,
-          nombre: c.nombreCurso,
+          id:          c.id               ?? '',
+          nombre:      c.nombre_curso      ?? '',
           descripcion: '',
-          ubicacion: c.ubicacion ?? '',
-          profesor: c.nombreProfesor ?? '',
-          horario: c.duracion ?? '',
-          dias: (c.clases ?? []).join(', '),
-          plazas: c.plazas ?? 0,
-          inscritos: 0,
-          activo: c.fecha_fin ? new Date(c.fecha_fin) >= new Date() : true,
-          fechaFin: c.fecha_fin ?? '',
-          selected: false,
+          ubicacion:   c.lugar            ?? '',
+          profesor:    c.profesor?.nombre  ?? '',
+          horario:     c.duracion          ?? '',
+          dias:        (c.horarios ?? []).join(', '),
+          plazas:      c.plazas            ?? 0,
+          inscritos:   (c.alumnos ?? []).length,
+          activo:      c.fecha_fin ? new Date(c.fecha_fin) >= new Date() : true,
+          fechaFin:    c.fecha_fin         ?? '',
+          selected:    false,
         }))
       );
       this.cursosFiltrados = [...this.cursos];
@@ -99,7 +94,7 @@ export class CursosComponent implements OnInit {
   }
 
   filtrarCursos(): void {
-    const texto = this.textoBusqueda.toLowerCase().trim();
+    const texto         = this.textoBusqueda.toLowerCase().trim();
     const filtrosActivos = this.filtros.filter((f) => f.activo).map((f) => f.label);
 
     this.cursosFiltrados = this.cursos.filter((c) => {
@@ -111,57 +106,44 @@ export class CursosComponent implements OnInit {
         c.descripcion.toLowerCase().includes(texto);
 
       let matchFiltro = true;
-      if (filtrosActivos.includes('Activos')) matchFiltro = matchFiltro && c.activo;
-      if (filtrosActivos.includes('Inactivos')) matchFiltro = matchFiltro && !c.activo;
-      if (filtrosActivos.includes('Con plazas disponibles'))
-        matchFiltro = matchFiltro && c.inscritos < c.plazas;
-      if (filtrosActivos.includes('Sin plazas'))
-        matchFiltro = matchFiltro && c.inscritos >= c.plazas;
+      if (filtrosActivos.includes('Activos'))               matchFiltro = matchFiltro && c.activo;
+      if (filtrosActivos.includes('Inactivos'))             matchFiltro = matchFiltro && !c.activo;
+      if (filtrosActivos.includes('Con plazas disponibles')) matchFiltro = matchFiltro && c.inscritos < c.plazas;
+      if (filtrosActivos.includes('Sin plazas'))            matchFiltro = matchFiltro && c.inscritos >= c.plazas;
 
       return matchTexto && matchFiltro;
     });
   }
 
-  toggleFiltros(): void {
-    this.filtrosAbiertos = !this.filtrosAbiertos;
-  }
+  toggleFiltros(): void { this.filtrosAbiertos = !this.filtrosAbiertos; }
 
   toggleChip(filtro: { label: string; activo: boolean }): void {
     filtro.activo = !filtro.activo;
     this.filtrarCursos();
   }
 
-  goToRegister(): void {
-    this.router.navigate(['/register']);
-  }
+  goToRegister(): void { this.router.navigate(['/register']); }
 
   onEliminar(): void {
     const dialogRef = this.dialog.open(DeleteMember, { width: '400px' });
     dialogRef.afterClosed().subscribe((confirmed: any) => {
       if (!confirmed) return;
-      console.log('Eliminar — conectar con actividadService.delete()');
+      const seleccionados = this.selectedCursos;
+      seleccionados.forEach((c) => {
+        this.actividadesService.deleteActividad(c.id).subscribe({
+          next: () => { this.cursos = this.cursos.filter((x) => x !== c); this.filtrarCursos(); },
+          error: (err: any) => console.error('Error DELETE actividad:', err),
+        });
+      });
     });
   }
 
-  onModificar(): void {
-    console.log('Modificar');
-  }
+  onModificar(): void { console.log('Modificar — pendiente'); }
 
-  openAddCurso(): void {
-    this.dialog.open(AddCurso, { width: '400px' });
-  }
+  openAddCurso(): void { this.dialog.open(AddCurso, { width: '400px' }); }
 
-  submit(): void {
-    this.router.navigate(['/main']);
-  }
-  onPrestamos() {
-    this.router.navigate(['/prestamos']);
-  }
-  onGastos() {
-    this.router.navigate(['/gastos']);
-  }
-  onIngresos() {
-    this.router.navigate(['/ingresos']);
-  }
-
+  submit():      void { this.router.navigate(['/main']); }
+  onPrestamos(): void { this.router.navigate(['/prestamos']); }
+  onGastos():    void { this.router.navigate(['/gastos']); }
+  onIngresos():  void { this.router.navigate(['/ingresos']); }
 }

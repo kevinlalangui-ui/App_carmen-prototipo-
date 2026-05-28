@@ -1,7 +1,13 @@
-import { Component, inject, Inject } from '@angular/core';
+import { Component, inject, Inject, signal, OnInit } from '@angular/core';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { CursoService, Curso } from '../../services/curso';
+import { ActividadesService } from '../../../../core/services/actividades/actividades.service';
+
+// Modelo local de curso para la vista de inscripción
+interface CursoItem {
+  id:     string;
+  nombre: string;
+}
 
 @Component({
   selector: 'app-cursos-add-member',
@@ -10,19 +16,39 @@ import { CursoService, Curso } from '../../services/curso';
   templateUrl: './cursos-member.html',
   styleUrl: './cursos-member.scss',
 })
-export class CursosMember {
-  private dialogRef = inject(MatDialogRef<CursosMember>);
-  cursoService = inject(CursoService);
+export class CursosMember implements OnInit {
+  private dialogRef         = inject(MatDialogRef<CursosMember>);
+  private actividadesService = inject(ActividadesService);
 
-  apuntados = new Set<number>();
+  // Objeto compatible con la plantilla existente: cursoService.cursos()
+  cursoService = {
+    cursos: signal<CursoItem[]>([]),
+  };
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { cursosActuales: number[] }) {
+  apuntados = new Set<string>();
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { cursosActuales: string[] }) {
     if (data?.cursosActuales) {
-      data.cursosActuales.forEach(id => this.apuntados.add(id));
+      data.cursosActuales.forEach((id) => this.apuntados.add(id));
     }
   }
 
-  toggleCurso(curso: Curso) {
+  ngOnInit(): void {
+    this.actividadesService.getActividades().subscribe({
+      next: (actividades: any[]) => {
+        const cursos: CursoItem[] = actividades.flatMap((a: any) =>
+          (a.cursos ?? []).map((c: any) => ({
+            id:     c.id          ?? '',
+            nombre: c.nombre_curso ?? '',
+          }))
+        );
+        this.cursoService.cursos.set(cursos);
+      },
+      error: (err: any) => console.error('Error cargando cursos:', err),
+    });
+  }
+
+  toggleCurso(curso: CursoItem): void {
     if (this.apuntados.has(curso.id)) {
       this.apuntados.delete(curso.id);
     } else {
@@ -30,15 +56,15 @@ export class CursosMember {
     }
   }
 
-  estaApuntado(curso: Curso) {
+  estaApuntado(curso: CursoItem): boolean {
     return this.apuntados.has(curso.id);
   }
 
-  close() {
+  close(): void {
     this.dialogRef.close(null);
   }
 
-  guardar() {
+  guardar(): void {
     this.dialogRef.close(Array.from(this.apuntados));
   }
 }
