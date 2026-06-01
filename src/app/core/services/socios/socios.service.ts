@@ -16,8 +16,8 @@ export class SociosService {
     return this.http.get<any[]>(`${this.URL}/socio/all`);
   }
 
-  guardar(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.URL}/socio/add`, payload);
+  guardarSocio(datos: any): Observable<any> {
+    return this.http.post<any>(`${this.URL}/socio/add`, datos);
   }
 
   deleteSocio(id: string): Observable<any> {

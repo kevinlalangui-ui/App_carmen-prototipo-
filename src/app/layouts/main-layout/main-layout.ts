@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,FormBuilder } from '@angular/forms';
 import { AddMember } from './components/add-member/add-member';
 import { ModifyMember } from './components/modify-member/modify-member';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ import { AddCurso } from './components/add-curso/add-curso';
 import { CursosMember } from './components/cursos-member/cursos-member';
 import { RouterModule } from '@angular/router';
 import { SociosService } from '../../core/services/socios/socios.service';
-import { ActividadService } from '../../core/services/actividad/actividad.service';
+import{ActividadesService} from '../../core/services/actividades/actividades.service';
 
 interface Socio {
   id: string;
@@ -48,11 +48,18 @@ interface Socio {
   styleUrl: './main-layout.scss',
 })
 export class MainLayout implements OnInit {
-  private dialog          = inject(MatDialog);
-  private router          = inject(Router);
-  private sociosService    = inject(SociosService);
-  private actividadService = inject(ActividadService);
+  private dialog = inject(MatDialog);
+  private router    = inject(Router);
+  private sociosService = inject(SociosService);
+  // private actividadService = inject(ActividadService);
 
+  constructor(
+    private actividadesService:ActividadesService,
+    private formBuilder:FormBuilder,
+
+  ) {
+    //formulariodeclaración
+  }
   filtrosAbiertos = false;
   sortColumn: 'nombres' | 'apellidos' | null = null;
   sortAsc = true;
@@ -353,5 +360,30 @@ export class MainLayout implements OnInit {
   onPrestamos(): void { this.router.navigate(['/prestamos']); }
   onGastos(): void    { this.router.navigate(['/gastos']); }
   onIngresos(): void  { this.router.navigate(['/ingresos']); }
+  //declaracion de envío de servicios
 
+  //añadir una actividad
+
+  addTweet() {
+    if (this.formTweet.invalid) {
+      alert("Formulario no válido");
+      return;
+    }
+
+    const datos = { ...this.formTweet.value };
+    // Convertir tags vacíos a null para que no de error
+    ['tag1', 'tag2', 'tag3'].forEach(tag => {
+      if (datos[tag] === '') datos[tag] = null;
+    });
+
+    this.authService.enviarTweet(datos).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.fnToggleTweet.emit();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 }

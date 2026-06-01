@@ -5,53 +5,53 @@
   <mat-icon>info</mat-icon>
   <h2>Nuevo Socio</h2>
 </div>
-<mat-dialog-content [formGroup]="form">
+<mat-dialog-content [formGroup]="formAddMember">
   <div class="fields">
     <mat-form-field appearance="outline">
       <input matInput formControlName="name" id="name" name="name" placeholder="Nombre" />
-      @if (form.get('name')?.touched) {
-        @if (form.get('name')?.errors?.['required']) {
+      @if (formAddMember.get('name')?.touched) {
+        @if (formAddMember.get('name')?.errors?.['required']) {
           <mat-error>El nombre es obligatorio</mat-error>
         }
       }
     </mat-form-field>
     <mat-form-field appearance="outline">
       <input matInput formControlName="apellidos" id="apellidos" name="apellidos" placeholder="Apellidos" />
-      @if (form.get('apellidos')?.touched) {
-        @if (form.get('apellidos')?.errors?.['required']) {
+      @if (formAddMember.get('apellidos')?.touched) {
+        @if (formAddMember.get('apellidos')?.errors?.['required']) {
           <mat-error>Los apellidos son obligatorios</mat-error>
         }
       }
     </mat-form-field>
     <mat-form-field appearance="outline">
       <input matInput formControlName="email" id="email" name="email" type="email" placeholder="Email" />
-      @if (form.get('email')?.touched) {
-        @if (form.get('email')?.errors?.['required']) {
+      @if (formAddMember.get('email')?.touched) {
+        @if (formAddMember.get('email')?.errors?.['required']) {
           <mat-error>El correo es obligatorio</mat-error>
         }
-        @if (form.get('email')?.errors?.['extension']) {
+        @if (formAddMember.get('email')?.errors?.['extension']) {
           <mat-error>Solo aceptamos gmail y hotmail</mat-error>
         }
-        @if (form.get('email')?.errors?.['customEmail']) {
+        @if (formAddMember.get('email')?.errors?.['customEmail']) {
           <mat-error>Correo no válido</mat-error>
         }
       }
     </mat-form-field>
     <mat-form-field appearance="outline">
       <input matInput formControlName="phone" id="phone" name="phone" placeholder="Teléfono" />
-      @if (form.get('phone')?.touched) {
-        @if (form.get('phone')?.errors?.['required']) {
+      @if (formAddMember.get('phone')?.touched) {
+        @if (formAddMember.get('phone')?.errors?.['required']) {
           <mat-error>El teléfono es obligatorio</mat-error>
         }
       }
     </mat-form-field>
     <mat-form-field appearance="outline">
       <input matInput formControlName="dni" id="dni" name="dni" placeholder="DNI/NIE" />
-      @if (form.get('dni')?.touched) {
-        @if (form.get('dni')?.errors?.['required']) {
+      @if (formAddMember.get('dni')?.touched) {
+        @if (formAddMember.get('dni')?.errors?.['required']) {
           <mat-error>El DNI es obligatorio</mat-error>
         }
-        @if (form.get('dni')?.errors?.['extension']) {
+        @if (formAddMember.get('dni')?.errors?.['extension']) {
           <mat-error>Formato inválido (ej: 12345678A)</mat-error>
         }
       }
@@ -69,11 +69,11 @@
   <button
     type="button"
     class="btn-estado"
-    [class.btn-activo]="form.get('activo')?.value"
-    [class.btn-inactivo]="!form.get('activo')?.value"
-    (click)="form.get('activo')?.setValue(!form.get('activo')?.value)">
+    [class.btn-activo]="formAddMember.get('activo')?.value"
+    [class.btn-inactivo]="!formAddMember.get('activo')?.value"
+    (click)="formAddMember.get('activo')?.setValue(!formAddMember.get('activo')?.value)">
     <span class="dot-estado"></span>
-    {{ form.get('activo')?.value ? 'Activo' : 'Inactivo' }}
+    {{ formAddMember.get('activo')?.value ? 'Activo' : 'Inactivo' }}
   </button>
   <button class="btn-activate" (click)="guardar()">Guardar</button>
 </mat-dialog-actions>

@@ -5,8 +5,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SociosService } from '../../../../core/services/socios/socios.service';
+import {EmailValidator} from '../../../../core/validators/email.validator';
+import{DniValidator} from '../../../../core/validators/dni.validator';
+import { maxLength } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-add-member',
@@ -25,45 +29,42 @@ import { CommonModule } from '@angular/common';
   styleUrl: './add-member.scss',
 })
 export class AddMember {
+  //nombre formulario reactivo
+  formAddMember: FormGroup;
   private dialogRef = inject(MatDialogRef<AddMember>);
-  private fb = inject(FormBuilder);
-  form: FormGroup;
 
-  // Número real del socio que se está editando
-  socioNumero: number;
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.socioNumero = data?.id ?? 0;
-
-    this.form = this.fb.group({
-      name: [data?.nombres ?? ''],
-      apellidos: [data?.apellidos ?? ''],
-      email: [data?.correo ?? ''],
-      phone: [data?.tel ?? ''],
-      dni: [data?.dni ?? ''],
-      profesor: [data?.profesor === 'Si' ? true : false],
-      activo: [data?.estado === 'Activo' ? true : false],
-    });
-  }
-
-  esEdicion(): boolean {
-    return !!this.data;
+  constructor(
+    private formBuilder: FormBuilder,
+    private sociosService: SociosService,
+  ) {
+    this.formAddMember = this.formBuilder.group({
+      "name":['',[Validators.required]],
+      "apellidos":['',[Validators.required]],
+      "email":['',[Validators.required,EmailValidator]],
+      "phone":['',[Validators.required,Validators.minLength(9),Validators.maxLength(9)]],
+      "dni":['',[Validators.required , DniValidator]],
+      "profesor":[false,[Validators.required]],
+      "activo":[true,[Validators.required]],
+    })
   }
 
   guardar() {
-    const val = this.form.value;
-    this.dialogRef.close({
-      nombres: val.name,
-      apellidos: val.apellidos,
-      correo: val.email,
-      tel: val.phone,
-      dni: val.dni,
-      profesor: val.profesor ? 'Si' : 'No',
-      estado: val.activo ? 'Activo' : 'Inactivo',
+    if (this.formAddMember.invalid) {
+      this.formAddMember.markAllAsTouched();
+      return;
+    }
+    this.sociosService.guardarSocio(this.formAddMember.value).subscribe({
+      next: data => {
+        console.log(data);
+        this.dialogRef.close(data);
+      },
+      error:(err) =>{
+        console.log(err);
+      }
     });
   }
-
-  cancel() {
+  cancel(): void {
     this.dialogRef.close(null);
   }
+
 }
