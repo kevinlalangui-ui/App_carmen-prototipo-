@@ -1,15 +1,18 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, inject, output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { EmailValidator } from '../../../../core/validators/email.validator';
+import { DniValidator } from '../../../../core/validators/dni.validator';
+import{SociosService} from '../../../../core/services/socios/socios.service';
 
 @Component({
-  selector: 'app-modify-add-member',
+  selector: 'app-modify-member',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -25,45 +28,45 @@ import { CommonModule } from '@angular/common';
   styleUrl: './modify-member.scss',
 })
 export class ModifyMember {
+  //cerrar signal
+  fntoggleModifyMember= output();
+//dependencias
   private dialogRef = inject(MatDialogRef<ModifyMember>);
-  private fb = inject(FormBuilder);
-  form: FormGroup;
+  formModifyMember: FormGroup;
+  //signal que almacene el socios que queremos editar
 
-  // Número real del socio que se está editando
-  socioNumero: number;
+  constructor(
+    private formBuilder: FormBuilder,
+    private sociosService :SociosService,
+  ) {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.socioNumero = data?.id ?? 0;
-
-    this.form = this.fb.group({
-      name: [data?.nombres ?? ''],
-      apellidos: [data?.apellidos ?? ''],
-      email: [data?.correo ?? ''],
-      phone: [data?.tel ?? ''],
-      dni: [data?.dni ?? ''],
-      profesor: [data?.profesor === 'Si' ? true : false],
-      activo: [data?.estado === 'Activo' ? true : false],
+    this.formModifyMember = this.formBuilder.group({
+      "name":['',[Validators.required]],
+      "apellidos":['',[Validators.required]],
+      "email":['',[Validators.required,EmailValidator]],
+      "phone":['',[Validators.required,Validators.minLength(9),Validators.maxLength(9)]],
+      "dni":['',[Validators.required , DniValidator]],
+      "profesor":[false,[Validators.required]],
+      "activo":[true,[Validators.required]],
     });
   }
 
-  esEdicion(): boolean {
-    return !!this.data;
-  }
+  guardarDatos() {
+    if (this.formModifyMember.invalid) {
+      alert("Formulario no válido");
+      return;
+    }
 
-  guardar() {
-    const val = this.form.value;
-    this.dialogRef.close({
-      nombres: val.name,
-      apellidos: val.apellidos,
-      correo: val.email,
-      tel: val.phone,
-      dni: val.dni,
-      profesor: val.profesor ? 'Si' : 'No',
-      estado: val.activo ? 'Activo' : 'Inactivo',
+    this.sociosService.update(this.formModifyMember.value,).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.fntoggleModifyMember.emit()
+
+      },
+      error: (err) => {
+        console.log(err)
+      }
     });
   }
 
-  cancel() {
-    this.dialogRef.close(null);
-  }
 }

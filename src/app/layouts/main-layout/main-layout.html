@@ -5,7 +5,7 @@
 
   <div class="fab-wrap">
     <div class="fab-options" [class.open]="fabAbierto">
-      <div class="fab-option" (click)="openMember(); fabAbierto = false">
+      <div class="fab-option" (click)="toggleOpenAddMember(); fabAbierto = false">
         <span class="fab-label">Nuevo socio</span>
         <button mat-mini-fab >
           <mat-icon>person_add</mat-icon>
@@ -182,7 +182,7 @@
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
               <mat-menu #menu="matMenu"  >
-                <button mat-menu-item (click)="openAddMember(socio)"><i class="bi bi-pencil-fill me-2"></i> Modificar</button>
+                <button mat-menu-item (click)="onModificarSocio(socio)"><i class="bi bi-pencil-fill me-2"></i> Modificar</button>
                 <button mat-menu-item (click)="onEliminar(socio)"><i class="bi bi-trash3-fill me-2"></i> Eliminar</button>
                 <button mat-menu-item (click)="onCorreo()"><i class="bi bi-envelope me-2"></i> Mandar correo</button>
               </mat-menu>
@@ -193,3 +193,13 @@
     </table>
   </div>
 </section>
+@if (openModifyMember()) {
+  <app-modify-member (fntoggleModifyMember)="toggleModifyMember()"></app-modify-member>
+}
+@if (openAddMember()) {
+  <app-add-member (fntoggleAddMember)="toggleOpenAddMember()" (fnSocioGuardado)="onSocioGuardado()"></app-add-member>
+}
+
+@if (openDeleteMember()) {
+  <app-delete-member [ids]="idsAEliminar" (fnToggleDeleteMember)="toggleDeleteMember()" (fnEliminado)="onEliminado()"></app-delete-member>
+}

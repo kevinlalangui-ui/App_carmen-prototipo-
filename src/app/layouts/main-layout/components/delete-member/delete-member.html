@@ -11,7 +11,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-button (click)="fnToggleDeleteMember.emit()">Cancelar</button>
   <button class="btn-eliminar" (click)="confirm()" [disabled]="confirmText !== 'eliminar'">
     Eliminar
   </button>

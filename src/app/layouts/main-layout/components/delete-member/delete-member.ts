@@ -1,26 +1,43 @@
-import { Component, inject } from '@angular/core';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Component, inject, input, output } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { SociosService } from '../../../../core/services/socios/socios.service';
 
 @Component({
-  selector: 'app-delete-add-member',
+  selector: 'app-delete-member',
   standalone: true,
   imports: [MatDialogModule, MatButtonModule, FormsModule],
   templateUrl: './delete-member.html',
   styleUrl: './delete-member.scss',
 })
 export class DeleteMember {
-  private dialogRef = inject(MatDialogRef<DeleteMember>);
+  ids = input<string[]>([]);
+
+  fnToggleDeleteMember = output();
+  fnEliminado          = output();
 
   confirmText = '';
 
-  confirm() {
-    if (this.confirmText !== 'eliminar') return;
-    this.dialogRef.close(true);
-  }
+  private sociosService = inject(SociosService);
 
-  cancel() {
-    this.dialogRef.close(false);
+  confirm(): void {
+    if (this.confirmText.toLowerCase() !== 'eliminar') return;
+
+    const lista = this.ids();
+    let completados = 0;
+
+    lista.forEach(id => {
+      this.sociosService.deleteSocio(id).subscribe({
+        next: () => {
+          completados++;
+          if (completados === lista.length) {
+            this.fnEliminado.emit();
+            this.fnToggleDeleteMember.emit();
+          }
+        },
+        error: (err: any) => console.error(`Error DELETE socio ${id}:`, err),
+      });
+    });
   }
 }

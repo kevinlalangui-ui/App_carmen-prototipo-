@@ -1,12 +1,12 @@
 <div class="header-row">
-  <span class="socio-label">socio nº{{ socioNumero }}</span>
-  <button class="close-btn" (click)="cancel()">✕</button>
+  <span class="socio-label">socio nº__</span>
+  <button class="close-btn" (click)="fntoggleModifyMember">✕</button>
 </div>
 <div class="title">
   <mat-icon>info</mat-icon>
   <h2>Modificar Socio</h2>
 </div>
-<mat-dialog-content [formGroup]="form">
+<mat-dialog-content [formGroup]="formModifyMember">
   <div class="fields">
     <mat-form-field appearance="outline">
       <input matInput formControlName="name" placeholder="Nombre" />
@@ -36,13 +36,13 @@
   <button
     type="button"
     class="btn-estado"
-    [class.btn-activo]="form.get('activo')?.value"
-    [class.btn-inactivo]="!form.get('activo')?.value"
-    (click)="form.get('activo')?.setValue(!form.get('activo')?.value)">
+    [class.btn-activo]="formModifyMember.get('activo')?.value"
+    [class.btn-inactivo]="!formModifyMember.get('activo')?.value"
+    (click)="formModifyMember.get('activo')?.setValue(!formModifyMember.get('activo')?.value)">
     <span class="dot-estado"></span>
-    {{ form.get('activo')?.value ? 'Activo' : 'Inactivo' }}
+    {{ formModifyMember.get('activo')?.value ? 'Activo' : 'Inactivo' }}
   </button>
-  <button class="btn-activate" (click)="guardar()">
-    {{ esEdicion() ? 'Actualizar' : 'Guardar' }}
+  <button class="btn-activate" (click)="guardarDatos()">
+
   </button>
 </mat-dialog-actions>

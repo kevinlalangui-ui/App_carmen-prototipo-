@@ -11,21 +11,20 @@ export class SociosService {
   private URL = environment.apiURL;
 
   constructor(private http: HttpClient) {}
-
+//listo
   getSocios(): Observable<any[]> {
     return this.http.get<any[]>(`${this.URL}/socio/all`);
   }
-
+//listo--
   guardarSocio(datos: any): Observable<any> {
     return this.http.post<any>(`${this.URL}/socio/add`, datos);
   }
-
+//listo--
   deleteSocio(id: string): Observable<any> {
-    const params = new HttpParams().set('id', id);
-    return this.http.delete<any>(`${this.URL}/socio/delete`, { params });
+    return this.http.delete<any>(`${this.URL}/socio/delete/${id}`);
   }
-
-  update(socio: any): Observable<any> {
-    return this.http.patch<any>(`${this.URL}/socio/update`, socio);
+//listo
+  update(id: string, datos:string): Observable<any> {
+    return this.http.patch<any>(`${this.URL}/socio/update/${id}`,datos);
   }
 }
