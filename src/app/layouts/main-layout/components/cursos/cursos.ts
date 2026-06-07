@@ -77,25 +77,25 @@ export class CursosComponent implements OnInit {
   onCheckChange(): void {}
 
   ngOnInit(): void {
-    this.actividadService.getAll().subscribe((actividades: any[]) => {
-      this.cursos = actividades.flatMap((a: any) =>
-        (a.cursos ?? []).map((c: any) => ({
-          id: c.id,
-          nombre: c.nombreCurso,
-          descripcion: '',
-          ubicacion: c.ubicacion ?? '',
-          profesor: c.nombreProfesor ?? '',
-          horario: c.duracion ?? '',
-          dias: (c.clases ?? []).join(', '),
-          plazas: c.plazas ?? 0,
-          inscritos: 0,
-          activo: c.fecha_fin ? new Date(c.fecha_fin) >= new Date() : true,
-          fechaFin: c.fecha_fin ?? '',
-          selected: false,
-        }))
-      );
-      this.cursosFiltrados = [...this.cursos];
-    });
+    // this.actividadService.getAll().subscribe((actividades: any[]) => {
+    //   this.cursos = actividades.flatMap((a: any) =>
+    //     (a.cursos ?? []).map((c: any) => ({
+    //       id: c.id,
+    //       nombre: c.nombreCurso,
+    //       descripcion: '',
+    //       ubicacion: c.ubicacion ?? '',
+    //       profesor: c.nombreProfesor ?? '',
+    //       horario: c.duracion ?? '',
+    //       dias: (c.clases ?? []).join(', '),
+    //       plazas: c.plazas ?? 0,
+    //       inscritos: 0,
+    //       activo: c.fecha_fin ? new Date(c.fecha_fin) >= new Date() : true,
+    //       fechaFin: c.fecha_fin ?? '',
+    //       selected: false,
+    //     }))
+    //   );
+    //   this.cursosFiltrados = [...this.cursos];
+    // });
   }
 
   filtrarCursos(): void {

@@ -42,18 +42,14 @@ interface Socio {
     CommonModule,
     FormsModule,
     RouterModule,
-    ModifyMember,
-    AddMember,
-    DeleteMember,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',
 })
 export class MainLayout implements OnInit {
-  // Dependencias
-  private dialog         = inject(MatDialog);
-  private router         = inject(Router);
-  private sociosService  = inject(SociosService);
+  private dialog           = inject(MatDialog);
+  private router           = inject(Router);
+  private sociosService    = inject(SociosService);
   private actividadService = inject(ActividadesService);
 
   // Variables
@@ -66,49 +62,26 @@ export class MainLayout implements OnInit {
   cargando = false;
   errorCarga: string | null = null;
   fabAbierto = false;
+  cursosDisponibles: any[] = [];
 
   filtros = [
-    { label: 'Activo',    activo: false },
-    { label: 'Inactivo',  activo: false },
-    { label: 'Profesor',  activo: false },
-    { label: 'A → Z',     activo: false },
-    { label: 'Z → A',     activo: false },
-    { label: '0 → 9',     activo: false },
-    { label: '9 → 0',     activo: false },
+    { label: 'Activo',   activo: false },
+    { label: 'Inactivo', activo: false },
+    { label: 'Profesor', activo: false },
+    { label: 'A → Z',    activo: false },
+    { label: 'Z → A',    activo: false },
+    { label: '0 → 9',    activo: false },
+    { label: '9 → 0',    activo: false },
   ];
 
-  // Datos
   socios: Socio[] = [];
-
-  // Signals de visibilidad de paneles
-  openModifyMember = signal<boolean>(false);
-  openAddMember    = signal<boolean>(false);
-  openDeleteMember = signal<boolean>(false);
-
-  // ── Toggle handlers ──────────────────────────────────────────────────────
-  toggleModifyMember(): void {
-    this.openModifyMember.update(state => !state);
-  }
-
-  toggleOpenAddMember(): void {
-    this.openAddMember.update(state => !state);
-  }
-
-  toggleDeleteMember(): void {
-    this.openDeleteMember.update(state => !state);
-  }
-
-  // ── Recibir aviso de socio guardado desde add-member ────────────────────
-  onSocioGuardado(): void {
-    this.cargarSocios();
-  }
 
   // ── Ciclo de vida ────────────────────────────────────────────────────────
   ngOnInit(): void {
     this.cargarSocios();
   }
 
-  // ── Carga de socios ──────────────────────────────────────────────────────
+  // ── Carga ────────────────────────────────────────────────────────────────
   cargarSocios(): void {
     this.cargando = true;
     this.errorCarga = null;
@@ -131,17 +104,16 @@ export class MainLayout implements OnInit {
     const cursos: string[] = Object.values(s.actividades ?? {}).flatMap(
       (a: any) => (a.cursos ?? []).map((c: any) => c.nombreCurso ?? c.id ?? '')
     );
-
     return {
-      id:            s.id               ?? s._id       ?? '',
-      nombres:       info.nombres        ?? '',
-      apellidos:     info.apellidos      ?? '',
-      correo:        info.correo         ?? '',
-      tel:           info.telefono       ?? '',
-      dni:           info.identificacion ?? '',
-      estado:        s.es_activo ? 'Activo' : 'Inactivo',
-      fechaVenc:     s.fecha_vencimiento ?? '',
-      profesor:      (Array.isArray(s.tipo_socio) ? s.tipo_socio : [])
+      id:             s.id               ?? s._id       ?? '',
+      nombres:        info.nombres        ?? '',
+      apellidos:      info.apellidos      ?? '',
+      correo:         info.correo         ?? '',
+      tel:            info.telefono       ?? '',
+      dni:            info.identificacion ?? '',
+      estado:         s.es_activo ? 'Activo' : 'Inactivo',
+      fechaVenc:      s.fecha_vencimiento ?? '',
+      profesor:       (Array.isArray(s.tipo_socio) ? s.tipo_socio : [])
         .some((t: string) => t?.toLowerCase() === 'profesor') ? 'Si' : 'No',
       cursos,
       cursosAbiertos: false,
@@ -149,16 +121,11 @@ export class MainLayout implements OnInit {
     };
   }
 
-  // ── Getters y filtros ────────────────────────────────────────────────────
+  // ── Getters ──────────────────────────────────────────────────────────────
   get sociosFiltrados(): Socio[] {
     let lista = this.socios;
-
-    if (this.estadoFiltro !== 'todos') {
-      lista = lista.filter(s => s.estado === this.estadoFiltro);
-    }
-    if (this.profesorFiltro !== 'todos') {
-      lista = lista.filter(s => s.profesor === this.profesorFiltro);
-    }
+    if (this.estadoFiltro !== 'todos')   lista = lista.filter(s => s.estado === this.estadoFiltro);
+    if (this.profesorFiltro !== 'todos') lista = lista.filter(s => s.profesor === this.profesorFiltro);
     if (this.textoBusqueda.trim()) {
       const texto = this.textoBusqueda.toLowerCase().trim();
       lista = lista.filter(s =>
@@ -171,17 +138,9 @@ export class MainLayout implements OnInit {
     return lista;
   }
 
-  get allSelected(): boolean {
-    return this.sociosFiltrados.length > 0 && this.sociosFiltrados.every(s => s.selected);
-  }
-
-  get someSelected(): boolean {
-    return this.sociosFiltrados.some(s => s.selected) && !this.allSelected;
-  }
-
-  get selectedSocios(): Socio[] {
-    return this.socios.filter(s => s.selected);
-  }
+  get allSelected(): boolean  { return this.sociosFiltrados.length > 0 && this.sociosFiltrados.every(s => s.selected); }
+  get someSelected(): boolean { return this.sociosFiltrados.some(s => s.selected) && !this.allSelected; }
+  get selectedSocios(): Socio[] { return this.socios.filter(s => s.selected); }
 
   // ── Acciones tabla ───────────────────────────────────────────────────────
   toggleAll(event: Event): void {
@@ -192,81 +151,51 @@ export class MainLayout implements OnInit {
   onCheckChange(): void {}
 
   filtrarEstado(): void {
-    this.estadoFiltro =
-      this.estadoFiltro === 'todos'  ? 'Activo'   :
-        this.estadoFiltro === 'Activo' ? 'Inactivo' : 'todos';
+    this.estadoFiltro = this.estadoFiltro === 'todos' ? 'Activo' : this.estadoFiltro === 'Activo' ? 'Inactivo' : 'todos';
   }
 
   filtrarProfesor(): void {
-    this.profesorFiltro =
-      this.profesorFiltro === 'todos' ? 'Si' :
-        this.profesorFiltro === 'Si'    ? 'No' : 'todos';
+    this.profesorFiltro = this.profesorFiltro === 'todos' ? 'Si' : this.profesorFiltro === 'Si' ? 'No' : 'todos';
   }
 
   sortBy(col: 'nombres' | 'apellidos'): void {
-    if (this.sortColumn === col) {
-      this.sortAsc = !this.sortAsc;
-    } else {
-      this.sortColumn = col;
-      this.sortAsc = true;
-    }
-    this.socios.sort((a, b) => {
-      const valA = a[col].toLowerCase();
-      const valB = b[col].toLowerCase();
-      return this.sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
-    });
+    if (this.sortColumn === col) { this.sortAsc = !this.sortAsc; } else { this.sortColumn = col; this.sortAsc = true; }
+    this.socios.sort((a, b) => this.sortAsc ? a[col].localeCompare(b[col]) : b[col].localeCompare(a[col]));
   }
 
-  toggleFiltros(): void {
-    this.filtrosAbiertos = !this.filtrosAbiertos;
+  toggleFiltros(): void { this.filtrosAbiertos = !this.filtrosAbiertos; }
+  toggleChip(filtro: any): void { filtro.activo = !filtro.activo; }
+
+  // ── Dialogs ──────────────────────────────────────────────────────────────
+  openAddMember(): void {
+    const ref = this.dialog.open(AddMember, { width: '480px' });
+    ref.afterClosed().subscribe((ok: boolean) => { if (ok) this.cargarSocios(); });
   }
 
-  toggleChip(filtro: any): void {
-    filtro.activo = !filtro.activo;
-  }
-
-  // ── Modify member (usa MatDialog — pendiente de migrar igual que add) ────
   onModificarSocio(socio: Socio): void {
-    const dialogRef = this.dialog.open(ModifyMember, {
-      width: '480px',
-      data: socio,
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (!result) return;
-      const index = this.socios.indexOf(socio);
-      if (index !== -1) this.socios[index] = { ...socio, ...result };
-    });
+    const ref = this.dialog.open(ModifyMember, { width: '480px', data: socio });
+    ref.afterClosed().subscribe((ok: boolean) => { if (ok) this.cargarSocios(); });
   }
-
-  // ── Eliminar ─────────────────────────────────────────────────────────────
-  idsAEliminar: string[] = [];
 
   onEliminar(socio?: Socio): void {
-    this.idsAEliminar = socio
+    const ids = socio
       ? [socio.id]
       : this.socios.filter(s => s.selected).map(s => s.id);
-    this.openDeleteMember.update(() => true);
+
+    const ref = this.dialog.open(DeleteMember, { width: '400px', data: { ids } });
+    ref.afterClosed().subscribe((ok: boolean) => { if (ok) this.cargarSocios(); });
   }
 
-  onEliminado(): void {
-    this.cargarSocios();
+  openAddCurso(): void {
+    const ref = this.dialog.open(AddCurso, { data: { cursosExistentes: this.cursosDisponibles } });
+    ref.afterClosed().subscribe((nuevoCurso: any) => {
+      if (!nuevoCurso) return;
+      this.actividadService.add(nuevoCurso).subscribe({
+        next: () => this.cargarSocios(),
+        error: (err: any) => console.error('Error ADD actividad:', err),
+      });
+    });
   }
-
-  // ── Cursos ───────────────────────────────────────────────────────────────
-  cursosDisponibles: any[] = [];
-
-  // openAddCurso(): void {
-  //   const dialogRef = this.dialog.open(AddCurso, {
-  //     data: { cursosExistentes: this.cursosDisponibles },
-  //   });
-  //   dialogRef.afterClosed().subscribe((nuevoCurso: any) => {
-  //     if (!nuevoCurso) return;
-  //     this.actividadService.add(nuevoCurso).subscribe({
-  //       next: () => this.cargarSocios(),
-  //       error: (err: any) => console.error('Error ADD actividad:', err),
-  //     });
-  //   });
-  // }
 
   // ── Navegación ───────────────────────────────────────────────────────────
   goToRegister(): void { this.router.navigate(['/register']); }

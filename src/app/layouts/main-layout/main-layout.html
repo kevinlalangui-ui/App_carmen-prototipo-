@@ -5,7 +5,7 @@
 
   <div class="fab-wrap">
     <div class="fab-options" [class.open]="fabAbierto">
-      <div class="fab-option" (click)="toggleOpenAddMember(); fabAbierto = false">
+      <div class="fab-option" (click)="openAddMember(); fabAbierto = false">
         <span class="fab-label">Nuevo socio</span>
         <button mat-mini-fab >
           <mat-icon>person_add</mat-icon>
@@ -197,9 +197,9 @@
   <app-modify-member (fntoggleModifyMember)="toggleModifyMember()"></app-modify-member>
 }
 @if (openAddMember()) {
-  <app-add-member (fntoggleAddMember)="toggleOpenAddMember()" (fnSocioGuardado)="onSocioGuardado()"></app-add-member>
+  <app-add-member (fntoggleAddMember)="toggleOpenAddMember()"></app-add-member>
 }
 
 @if (openDeleteMember()) {
-  <app-delete-member [ids]="idsAEliminar" (fnToggleDeleteMember)="toggleDeleteMember()" (fnEliminado)="onEliminado()"></app-delete-member>
+  <app-delete-member (fnToggleDeleteMember)="toggleDeleteMember()"></app-delete-member>
 }

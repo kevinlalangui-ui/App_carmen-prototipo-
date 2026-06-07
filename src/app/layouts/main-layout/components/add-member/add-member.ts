@@ -1,10 +1,10 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SociosService } from '../../../../core/services/socios/socios.service';
@@ -15,12 +15,12 @@ import { DniValidator } from '../../../../core/validators/dni.validator';
   selector: 'app-add-member',
   standalone: true,
   imports: [
+    MatDialogModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     MatRadioModule,
     MatIconModule,
-    MatDialogModule,
     ReactiveFormsModule,
     CommonModule,
   ],
@@ -28,11 +28,9 @@ import { DniValidator } from '../../../../core/validators/dni.validator';
   styleUrl: './add-member.scss',
 })
 export class AddMember {
-  fntoggleAddMember = output();
-  fnSocioGuardado   = output();
-
   formAddMember: FormGroup;
 
+  private dialogRef    = inject(MatDialogRef<AddMember>);
   private sociosService = inject(SociosService);
 
   constructor(private formBuilder: FormBuilder) {
@@ -71,12 +69,9 @@ export class AddMember {
 
     this.sociosService.guardarSocio(this.mapToApiSocio(this.formAddMember.value)).subscribe({
       next: () => {
-        this.fnSocioGuardado.emit();
-        this.fntoggleAddMember.emit();
+        this.dialogRef.close(true);
       },
-      error: (err: any) => {
-        console.error('Error ADD socio:', err);
-      },
+      error: (err: any) => console.error('Error ADD socio:', err),
     });
   }
 }

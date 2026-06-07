@@ -1,4 +1,4 @@
-import { Component, Inject, inject, output } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -9,7 +9,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { EmailValidator } from '../../../../core/validators/email.validator';
 import { DniValidator } from '../../../../core/validators/dni.validator';
-import{SociosService} from '../../../../core/services/socios/socios.service';
+import { SociosService } from '../../../../core/services/socios/socios.service';
 
 @Component({
   selector: 'app-modify-member',
@@ -28,45 +28,51 @@ import{SociosService} from '../../../../core/services/socios/socios.service';
   styleUrl: './modify-member.scss',
 })
 export class ModifyMember {
-  //cerrar signal
-  fntoggleModifyMember= output();
-//dependencias
-  private dialogRef = inject(MatDialogRef<ModifyMember>);
   formModifyMember: FormGroup;
-  //signal que almacene el socios que queremos editar
+
+  private dialogRef     = inject(MatDialogRef<ModifyMember>);
+  private sociosService = inject(SociosService);
 
   constructor(
     private formBuilder: FormBuilder,
-    private sociosService :SociosService,
+    @Inject(MAT_DIALOG_DATA) public socio: any,
   ) {
-
     this.formModifyMember = this.formBuilder.group({
-      "name":['',[Validators.required]],
-      "apellidos":['',[Validators.required]],
-      "email":['',[Validators.required,EmailValidator]],
-      "phone":['',[Validators.required,Validators.minLength(9),Validators.maxLength(9)]],
-      "dni":['',[Validators.required , DniValidator]],
-      "profesor":[false,[Validators.required]],
-      "activo":[true,[Validators.required]],
+      name:      [socio?.nombres   ?? '', [Validators.required]],
+      apellidos: [socio?.apellidos ?? '', [Validators.required]],
+      email:     [socio?.correo    ?? '', [Validators.required, EmailValidator]],
+      phone:     [socio?.tel       ?? '', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      dni:       [socio?.dni       ?? '', [Validators.required, DniValidator]],
+      profesor:  [socio?.profesor === 'Si', [Validators.required]],
+      activo:    [socio?.estado === 'Activo', [Validators.required]],
     });
   }
 
-  guardarDatos() {
+  private mapToApiSocio(formValue: any): any {
+    return {
+      informacion_personal: {
+        nombres:        formValue.name,
+        apellidos:      formValue.apellidos,
+        correo:         formValue.email,
+        telefono:       formValue.phone,
+        identificacion: formValue.dni,
+      },
+      tipo_socio: formValue.profesor ? ['PROFESOR'] : ['REGULAR'],
+      es_activo:  formValue.activo,
+    };
+  }
+
+  guardarDatos(): void {
     if (this.formModifyMember.invalid) {
-      alert("Formulario no válido");
+      this.formModifyMember.markAllAsTouched();
       return;
     }
 
-    this.sociosService.update(this.formModifyMember.value,).subscribe({
-      next: (response) => {
-        console.log(response);
-        this.fntoggleModifyMember.emit()
-
+    this.sociosService.update(this.mapToApiSocio(this.formModifyMember.value), this.socio?.id).subscribe({
+      next: () => {
+        this.dialogRef.close(true);
       },
-      error: (err) => {
-        console.log(err)
-      }
+      error: (err: any) => console.error('Error UPDATE socio:', err),
     });
   }
-
 }

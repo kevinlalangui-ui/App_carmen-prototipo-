@@ -1,5 +1,5 @@
-import { Component, inject, input, output } from '@angular/core';
-import { MatDialogModule } from '@angular/material/dialog';
+import { Component, Inject, inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { SociosService } from '../../../../core/services/socios/socios.service';
@@ -12,19 +12,17 @@ import { SociosService } from '../../../../core/services/socios/socios.service';
   styleUrl: './delete-member.scss',
 })
 export class DeleteMember {
-  ids = input<string[]>([]);
-
-  fnToggleDeleteMember = output();
-  fnEliminado          = output();
-
   confirmText = '';
 
+  private dialogRef     = inject(MatDialogRef<DeleteMember>);
   private sociosService = inject(SociosService);
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { ids: string[] }) {}
 
   confirm(): void {
     if (this.confirmText.toLowerCase() !== 'eliminar') return;
 
-    const lista = this.ids();
+    const lista = this.data.ids;
     let completados = 0;
 
     lista.forEach(id => {
@@ -32,8 +30,7 @@ export class DeleteMember {
         next: () => {
           completados++;
           if (completados === lista.length) {
-            this.fnEliminado.emit();
-            this.fnToggleDeleteMember.emit();
+            this.dialogRef.close(true);
           }
         },
         error: (err: any) => console.error(`Error DELETE socio ${id}:`, err),
