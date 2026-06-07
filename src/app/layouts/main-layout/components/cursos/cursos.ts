@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { DeleteMember } from '../delete-member/delete-member';
 import { AddCurso } from '../add-curso/add-curso';
-import { ActividadService } from '../../../../core/services/actividad/actividad.service';
+import{ActividadesService} from '../../../../core/services/actividades/actividades.service';
 
 export interface Curso {
   id: string;
@@ -43,7 +43,7 @@ export interface Curso {
 export class CursosComponent implements OnInit {
   private router = inject(Router);
   private dialog = inject(MatDialog);
-  private actividadService = inject(ActividadService);
+  // private actividadService = inject(ActividadService);
 
   fabAbierto = false;
   filtrosAbiertos = false;

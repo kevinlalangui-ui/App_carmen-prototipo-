@@ -255,18 +255,18 @@ export class MainLayout implements OnInit {
   // ── Cursos ───────────────────────────────────────────────────────────────
   cursosDisponibles: any[] = [];
 
-  openAddCurso(): void {
-    const dialogRef = this.dialog.open(AddCurso, {
-      data: { cursosExistentes: this.cursosDisponibles },
-    });
-    dialogRef.afterClosed().subscribe((nuevoCurso: any) => {
-      if (!nuevoCurso) return;
-      this.actividadService.add(nuevoCurso).subscribe({
-        next: () => this.cargarSocios(),
-        error: (err: any) => console.error('Error ADD actividad:', err),
-      });
-    });
-  }
+  // openAddCurso(): void {
+  //   const dialogRef = this.dialog.open(AddCurso, {
+  //     data: { cursosExistentes: this.cursosDisponibles },
+  //   });
+  //   dialogRef.afterClosed().subscribe((nuevoCurso: any) => {
+  //     if (!nuevoCurso) return;
+  //     this.actividadService.add(nuevoCurso).subscribe({
+  //       next: () => this.cargarSocios(),
+  //       error: (err: any) => console.error('Error ADD actividad:', err),
+  //     });
+  //   });
+  // }
 
   // ── Navegación ───────────────────────────────────────────────────────────
   goToRegister(): void { this.router.navigate(['/register']); }
