@@ -61,7 +61,6 @@ export class MainLayout implements OnInit {
   profesorFiltro: 'todos' | 'Si' | 'No' = 'todos';
   textoBusqueda = '';
 
-
   cargando = true;
   errorCarga: string | null = null;
 
@@ -78,12 +77,10 @@ export class MainLayout implements OnInit {
   socios: Socio[] = [];
   cursosDisponibles: string[] = [];
 
-
   ngOnInit(): void {
     this.cargarSocios();
     this.cargarActividades();
   }
-
 
   cargarSocios(): void {
     this.cargando = true;
@@ -91,12 +88,9 @@ export class MainLayout implements OnInit {
 
     this.sociosService.getSocios().subscribe({
       next: (data: any[]) => {
-        console.log('RAW socio[6]:', JSON.stringify(data[6], null, 2));
-        this.socios = (data ?? []).map((s: any) => this.mapearSocio(s));
         this.socios = (data ?? []).map((s: any) => this.mapearSocio(s));
         this.cargando = false;
         this.cdr.detectChanges();
-
       },
       error: (err: any) => {
         console.error('Error GET /socio/all:', err);
@@ -111,7 +105,7 @@ export class MainLayout implements OnInit {
     this.actividadService.getAll().subscribe({
       next: (data: any[]) => {
         this.cursosDisponibles = data.flatMap((a: any) =>
-          (a.cursos ?? []).map((c: any) => c.nombre_curso ?? '')  // era c.nombreCurso
+          (a.cursos ?? []).map((c: any) => c.nombre_curso ?? '')
         );
       },
       error: (err: any) => console.error('Error cargando actividades:', err),
@@ -136,12 +130,11 @@ export class MainLayout implements OnInit {
     };
   }
 
-
   private mapearSocio(s: any): Socio {
     const info = s.informacion_personal ?? {};
 
     const cursos: string[] = Object.values(s.actividades ?? {}).flatMap(
-      (a: any) => (a.cursos ?? []).map((c: any) => c.nombre_curso ?? c.id ?? '')  // era c.nombreCurso
+      (a: any) => (a.cursos ?? []).map((c: any) => c.nombre_curso ?? c.id ?? '')
     );
 
     return {
@@ -154,13 +147,12 @@ export class MainLayout implements OnInit {
       estado:    s.es_activo ? 'Activo' : 'Inactivo',
       fechaVenc: s.fecha_vencimiento ?? '',
       profesor:  (Array.isArray(s.tipo_socio) ? s.tipo_socio : [])
-                   .some((t: string) => t?.toLowerCase() === 'profesor') ? 'Si' : 'No',
+        .some((t: string) => t?.toLowerCase() === 'profesor') ? 'Si' : 'No',
       cursos,
       cursosAbiertos: false,
       selected:       false,
     };
   }
-
 
   get sociosFiltrados(): Socio[] {
     let lista = this.socios;
@@ -171,19 +163,36 @@ export class MainLayout implements OnInit {
     if (this.profesorFiltro !== 'todos') {
       lista = lista.filter((s) => s.profesor === this.profesorFiltro);
     }
+
     if (this.textoBusqueda.trim()) {
-      const texto = this.textoBusqueda.toLowerCase().trim();
-      lista = lista.filter(
-        (s) =>
-          s.nombres.toLowerCase().includes(texto) ||
-          s.apellidos.toLowerCase().includes(texto) ||
-          s.correo.toLowerCase().includes(texto) ||
-          s.dni.toLowerCase().includes(texto),
-      );
+      const normalizar = (str: string) =>
+        (str ?? '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
+
+      const palabras = normalizar(this.textoBusqueda).trim().split(/\s+/);
+
+      lista = lista.filter((s) => {
+        // Campos individuales normalizados
+        const campos = [
+          s.nombres,
+          s.apellidos,
+          s.correo,
+          s.dni,
+          s.tel,
+          ...s.cursos,          // cada curso como campo separado
+        ].map(normalizar);
+
+        // Cada palabra debe aparecer en AL MENOS UNO de los campos
+        return palabras.every((palabra) =>
+          campos.some((campo) => campo.includes(palabra))
+        );
+      });
     }
+
     return lista;
   }
-
   get allSelected(): boolean {
     return this.sociosFiltrados.length > 0 && this.sociosFiltrados.every((s) => s.selected);
   }
@@ -207,13 +216,13 @@ export class MainLayout implements OnInit {
   filtrarEstado(): void {
     this.estadoFiltro =
       this.estadoFiltro === 'todos'   ? 'Activo'   :
-      this.estadoFiltro === 'Activo'  ? 'Inactivo' : 'todos';
+        this.estadoFiltro === 'Activo'  ? 'Inactivo' : 'todos';
   }
 
   filtrarProfesor(): void {
     this.profesorFiltro =
       this.profesorFiltro === 'todos' ? 'Si'  :
-      this.profesorFiltro === 'Si'    ? 'No'  : 'todos';
+        this.profesorFiltro === 'Si'    ? 'No'  : 'todos';
   }
 
   sortBy(col: 'nombres' | 'apellidos'): void {
@@ -239,52 +248,52 @@ export class MainLayout implements OnInit {
   }
 
   openAddMember(socio?: Socio): void {
-  if (socio) {
-    const dialogRef = this.dialog.open(ModifyMember, {
-      width: '480px',
-      data: socio,
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (!result) return;
-      this.sociosService.update({ id: socio.id, ...this.mapToApiSocio(result) }).subscribe({
-        next: () => {
-          const index = this.socios.findIndex((s) => s.id === socio.id);
-          if (index !== -1) {
+    if (socio) {
+      const dialogRef = this.dialog.open(ModifyMember, {
+        width: '480px',
+        data: socio,
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (!result) return;
+        this.sociosService.update({ id: socio.id, ...this.mapToApiSocio(result) }).subscribe({
+          next: () => {
+            const index = this.socios.findIndex((s) => s.id === socio.id);
+            if (index !== -1) {
+              this.socios = [
+                ...this.socios.slice(0, index),
+                { ...socio, ...result },
+                ...this.socios.slice(index + 1),
+              ];
+            }
+            this.cdr.detectChanges();
+          },
+          error: (err: any) => console.error('Error UPDATE socio:', err),
+        });
+      });
+    } else {
+      const dialogRef = this.dialog.open(AddMember, {
+        width: '480px',
+        data: null,
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (!result) return;
+        this.sociosService.guardar(this.mapToApiSocio(result)).subscribe({
+          next: (nuevo: any) => {
             this.socios = [
-              ...this.socios.slice(0, index),
-              { ...socio, ...result },
-              ...this.socios.slice(index + 1),
+              ...this.socios,
+              {
+                ...result,
+                id: nuevo.id,
+                cursosAbiertos: false,
+                selected: false,
+                cursos: [],
+              },
             ];
-          }
-          this.cdr.detectChanges();
-        },
-        error: (err: any) => console.error('Error UPDATE socio:', err),
+            this.cdr.detectChanges();
+          },
+          error: (err: any) => console.error('Error ADD socio:', err),
+        });
       });
-    });
-  } else {
-    const dialogRef = this.dialog.open(AddMember, {
-      width: '480px',
-      data: null,
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (!result) return;
-      this.sociosService.guardar(this.mapToApiSocio(result)).subscribe({
-        next: (nuevo: any) => {
-          this.socios = [
-            ...this.socios,
-            {
-              ...result,
-              id: nuevo.id,
-              cursosAbiertos: false,
-              selected: false,
-              cursos: [],
-            },
-          ];
-          this.cdr.detectChanges();
-        },
-        error: (err: any) => console.error('Error ADD socio:', err),
-      });
-    });
     }
   }
 
@@ -342,7 +351,6 @@ export class MainLayout implements OnInit {
       if (!confirmed) return;
 
       if (socio) {
-
         this.sociosService.deleteSocio(socio.id).subscribe({
           next: () => {
             this.socios = this.socios.filter((s) => s !== socio);
@@ -350,7 +358,6 @@ export class MainLayout implements OnInit {
           error: (err: any) => console.error('Error DELETE socio:', err),
         });
       } else {
-
         const seleccionados = this.socios.filter((s) => s.selected);
         let completados = 0;
 
@@ -358,7 +365,6 @@ export class MainLayout implements OnInit {
           this.sociosService.deleteSocio(s.id).subscribe({
             next: () => {
               completados++;
-
               if (completados === seleccionados.length) {
                 this.socios = this.socios.filter((x) => !x.selected);
               }
@@ -392,5 +398,4 @@ export class MainLayout implements OnInit {
   onPrestamos(): void { this.router.navigate(['/prestamos']); }
   onGastos(): void    { this.router.navigate(['/gastos']); }
   onIngresos(): void  { this.router.navigate(['/ingresos']); }
-
 }
