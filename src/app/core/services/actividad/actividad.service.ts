@@ -21,8 +21,10 @@ export class ActividadService {
     return this.http.patch<any>(`${BASE}/actividad/update`, actividad, { params });
   }
 
-  delete(id: string): Observable<any> {
-    const params = new HttpParams().set('id', id);
-    return this.http.delete<any>(`${BASE}/actividad/delete`, { params });
+  deleteCurso(actividadId: string, cursoId: string): Observable<any> {
+    const params = new HttpParams()
+      .set('actividadId', actividadId)
+      .set('cursoId', cursoId);
+    return this.http.delete<any>(`${BASE}/actividad/curso/delete`, { params });
   }
 }

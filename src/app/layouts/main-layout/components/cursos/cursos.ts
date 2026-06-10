@@ -13,6 +13,7 @@ import { ActividadService } from '../../../../core/services/actividad/actividad.
 
 export interface Curso {
   id: string;
+  actividadId: string;
   nombre: string;
   descripcion: string;
   ubicacion: string;
@@ -81,8 +82,9 @@ export class CursosComponent implements OnInit {
       this.cursos = actividades.flatMap((a: any) =>
         (a.cursos ?? []).map((c: any) => ({
           id:          c.id                        ?? '',
+          actividadId: a.id                        ?? '',  // ← añadir
           nombre:      c.nombre_curso              ?? '',
-          descripcion: a.nombre_actividad          ?? '',  // actividad como contexto
+          descripcion: a.nombre_actividad          ?? '',
           ubicacion:   c.lugar                     ?? '',
           profesor:    c.profesor?.nombre_profesor ?? '',
           horario:     c.duracion                  ?? '',
@@ -135,11 +137,39 @@ export class CursosComponent implements OnInit {
     this.router.navigate(['/register']);
   }
 
-  onEliminar(): void {
+  onEliminar(curso?: Curso): void {
     const dialogRef = this.dialog.open(DeleteMember, { width: '400px' });
+
     dialogRef.afterClosed().subscribe((confirmed: any) => {
       if (!confirmed) return;
-      console.log('Eliminar — conectar con actividadService.delete()');
+
+      if (curso) {
+        // Eliminar uno desde el menú de tres puntos
+        this.actividadService.deleteCurso(curso.actividadId, curso.id).subscribe({
+          next: () => {
+            this.cursos = this.cursos.filter(c => c !== curso);
+            this.cursosFiltrados = this.cursosFiltrados.filter(c => c !== curso);
+          },
+          error: (err: any) => console.error('Error DELETE curso:', err),
+        });
+      } else {
+        // Eliminar seleccionados desde el botón de la toolbar
+        const seleccionados = this.cursos.filter(c => c.selected);
+        let completados = 0;
+
+        seleccionados.forEach(c => {
+          this.actividadService.deleteCurso(c.actividadId, c.id).subscribe({
+            next: () => {
+              completados++;
+              if (completados === seleccionados.length) {
+                this.cursos = this.cursos.filter(x => !x.selected);
+                this.cursosFiltrados = this.cursosFiltrados.filter(x => !x.selected);
+              }
+            },
+            error: (err: any) => console.error(`Error DELETE curso ${c.id}:`, err),
+          });
+        });
+      }
     });
   }
 
@@ -162,6 +192,7 @@ export class CursosComponent implements OnInit {
             this.cursos = actividades.flatMap((a: any) =>
               (a.cursos ?? []).map((c: any) => ({
                 id:          c.id                         ?? '',
+                actividadId: a.id                        ?? '',
                 nombre:      c.nombre_curso               ?? '',
                 descripcion: a.nombre_actividad           ?? '',
                 ubicacion:   c.lugar                      ?? '',
