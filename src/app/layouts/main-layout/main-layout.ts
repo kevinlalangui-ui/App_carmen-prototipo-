@@ -314,6 +314,24 @@ export class MainLayout implements OnInit {
     });
   }
 
+  openCursosMember(socio: Socio): void {
+    const dialogRef = this.dialog.open(CursosMember, {
+      width: '480px',
+      data: { cursosActuales: socio.cursos },
+    });
+
+    dialogRef.afterClosed().subscribe((inscripciones: { actividadId: string, cursoId: string }[]) => {
+      if (!inscripciones || inscripciones.length === 0) return;
+
+      inscripciones.forEach(ins => {
+        this.sociosService.inscribir(socio.id, ins.actividadId, ins.cursoId).subscribe({
+          next: () => this.cargarSocios(),
+          error: (err: any) => console.error('Error inscribir socio:', err),
+        });
+      });
+    });
+  }
+
   goToRegister(): void { this.router.navigate(['/register']); }
   cursos(): void       { this.router.navigate(['/cursos']); }
 

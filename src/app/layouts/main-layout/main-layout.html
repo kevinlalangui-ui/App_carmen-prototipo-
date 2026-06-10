@@ -36,7 +36,7 @@
       <i class="bi bi-file-earmark-text" (click)="onPrestamos(); fabAbierto = false"></i>
       <span>Prestamos</span>
     </button>
-    <button class="action-bar-btn " (click)="cursos(); fabAbierto = false">
+    <button class="action-bar-btn" (click)="cursos(); fabAbierto = false">
       <i class="bi bi-book"></i>
       <span>Cursos</span>
     </button>
@@ -89,124 +89,132 @@
   </div>
 
   @if (cargando) {
-  <div class="loading-state">
-    <div class="spinner"></div>
-    <p>Cargando socios...</p>
-  </div>
-}
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando socios...</p>
+    </div>
+  }
 
-<!-- Error -->
   @if (errorCarga) {
-  <div class="error-state">
-    <p>{{ errorCarga }}</p>
-    <button (click)="cargarSocios()">Reintentar</button>
-  </div>
+    <div class="error-state">
+      <p>{{ errorCarga }}</p>
+      <button (click)="cargarSocios()">Reintentar</button>
+    </div>
   }
 
   @if (!cargando && !errorCarga) {
-  <div class="container mt-3">
-    <table class="table">
-      <thead>
-      <tr>
-        <th style="width: 40px;">
-          <input type="checkbox"
-                 [checked]="allSelected"
-                 [indeterminate]="someSelected"
-                 (change)="toggleAll($event)" />
-        </th>
-        <th>ID socio</th>
-        <th style="cursor:pointer" (click)="sortBy('nombres')">
-          Nombres
-          @if (sortColumn === 'nombres') {
-            {{ sortAsc ? '↑' : '↓' }}
-          }
-        </th>
-        <th style="cursor:pointer" (click)="sortBy('apellidos')">
-          Apellidos
-          @if (sortColumn === 'apellidos') {
-            {{ sortAsc ? '↑' : '↓' }}
-          }
-        </th>
-        <th>Correos</th>
-        <th>Teléfono</th>
-        <th>DNI/NIE</th>
-        <th style="cursor:pointer" (click)="filtrarEstado()">
-          Estado
-          @if (estadoFiltro === 'Activo') { ✅ }
-          @if (estadoFiltro === 'Inactivo') { ❌ }
-        </th>
-        <th style="cursor:pointer" (click)="filtrarProfesor()">
-          Profesor
-          @if (profesorFiltro === 'Si') { ✅ }
-          @if (profesorFiltro === 'No') { ❌ }
-        </th>
-        <th>Cursos</th>
-        <th class="text-end"><i class="bi bi-cloud-arrow-down-fill"></i></th>
-      </tr>
-      </thead>
-      <tbody>
-        @for (socio of sociosFiltrados; track socio.id) {
-          <tr [class.fila-seleccionada]="socio.selected">
-            <td>
-              <input type="checkbox" [(ngModel)]="socio.selected" (change)="onCheckChange()" />
-            </td>
-            <td>{{ socio.id }}</td>
-            <td>{{ socio.nombres }}</td>
-            <td>{{ socio.apellidos }}</td>
-            <td>{{ socio.correo }}</td>
-            <td>{{ socio.tel }}</td>
-            <td>
-              <div>{{ socio.dni }}</div>
-              <small class="text-muted d-block" style="font-size: 0.7rem;">DNI</small>
-            </td>
-            <td>
-              <div class="d-flex align-items-center gap-2">
-                <div style="width:20px;height:20px;border-radius:50%;"
-                     [style.background-color]="socio.estado === 'Activo' ? '#6CAD6A' : '#aaa'"></div>
-                <div>
-                  <div class="fw-bold" style="line-height:1;">{{ socio.estado }}</div>
-                  <small class="text-muted" style="font-size:0.7rem;">{{ socio.fechaVenc }}</small>
+    <div class="container mt-3">
+      <table class="table">
+        <thead>
+        <tr>
+          <th style="width: 40px;">
+            <input type="checkbox"
+                   [checked]="allSelected"
+                   [indeterminate]="someSelected"
+                   (change)="toggleAll($event)" />
+          </th>
+          <th>ID socio</th>
+          <th style="cursor:pointer" (click)="sortBy('nombres')">
+            Nombres
+            @if (sortColumn === 'nombres') {
+              {{ sortAsc ? '↑' : '↓' }}
+            }
+          </th>
+          <th style="cursor:pointer" (click)="sortBy('apellidos')">
+            Apellidos
+            @if (sortColumn === 'apellidos') {
+              {{ sortAsc ? '↑' : '↓' }}
+            }
+          </th>
+          <th>Correos</th>
+          <th>Teléfono</th>
+          <th>DNI/NIE</th>
+          <th style="cursor:pointer" (click)="filtrarEstado()">
+            Estado
+            @if (estadoFiltro === 'Activo') { ✅ }
+            @if (estadoFiltro === 'Inactivo') { ❌ }
+          </th>
+          <th style="cursor:pointer" (click)="filtrarProfesor()">
+            Profesor
+            @if (profesorFiltro === 'Si') { ✅ }
+            @if (profesorFiltro === 'No') { ❌ }
+          </th>
+          <th>Cursos</th>
+          <th class="text-end"><i class="bi bi-cloud-arrow-down-fill"></i></th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (socio of sociosFiltrados; track socio.id) {
+            <tr [class.fila-seleccionada]="socio.selected">
+              <td>
+                <input type="checkbox" [(ngModel)]="socio.selected" (change)="onCheckChange()" />
+              </td>
+              <td>{{ socio.id }}</td>
+              <td>{{ socio.nombres }}</td>
+              <td>{{ socio.apellidos }}</td>
+              <td>{{ socio.correo }}</td>
+              <td>{{ socio.tel }}</td>
+              <td>
+                <div>{{ socio.dni }}</div>
+                <small class="text-muted d-block" style="font-size: 0.7rem;">DNI</small>
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div style="width:20px;height:20px;border-radius:50%;"
+                       [style.background-color]="socio.estado === 'Activo' ? '#6CAD6A' : '#aaa'"></div>
+                  <div>
+                    <div class="fw-bold" style="line-height:1;">{{ socio.estado }}</div>
+                    <small class="text-muted" style="font-size:0.7rem;">{{ socio.fechaVenc }}</small>
+                  </div>
                 </div>
-              </div>
-            </td>
-            <td>
-              <div class="d-flex align-items-center gap-2">
-                <div style="width:20px;height:20px;border-radius:50%;"
-                     [style.background-color]="socio.profesor === 'Si' ? '#6CAD6A' : '#aaa'"></div>
-                <div class="fw-bold">{{ socio.profesor }}</div>
-              </div>
-            </td>
-            <td>
-              <div class="cursos-cell">
-                <button class="btn-cursos" (click)="socio.cursosAbiertos = !socio.cursosAbiertos"
-                        [disabled]="!socio.cursos.length">
-                  <i class="bi" [class.bi-chevron-down]="!socio.cursosAbiertos"
-                     [class.bi-chevron-up]="socio.cursosAbiertos"></i>
-                  {{ socio.cursos.length ? socio.cursos.length + ' curso(s)' : 'Sin cursos asignados' }}
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div style="width:20px;height:20px;border-radius:50%;"
+                       [style.background-color]="socio.profesor === 'Si' ? '#6CAD6A' : '#aaa'"></div>
+                  <div class="fw-bold">{{ socio.profesor }}</div>
+                </div>
+              </td>
+              <td>
+                <div class="cursos-cell">
+                  <button class="btn-cursos" (click)="socio.cursosAbiertos = !socio.cursosAbiertos"
+                          [disabled]="!socio.cursos.length">
+                    <i class="bi" [class.bi-chevron-down]="!socio.cursosAbiertos"
+                       [class.bi-chevron-up]="socio.cursosAbiertos"></i>
+                    {{ socio.cursos.length ? socio.cursos.length + ' curso(s)' : 'Sin cursos asignados' }}
+                  </button>
+                  <div class="cursos-dropdown" [class.abierto]="socio.cursosAbiertos">
+                    @for (curso of socio.cursos; track curso) {
+                      <div class="curso-item">
+                        <i class="bi bi-book"></i> {{ curso }}
+                      </div>
+                    }
+                  </div>
+                </div>
+              </td>
+              <td class="text-end">
+                <button class="btn btn-link text-dark p-0" [matMenuTriggerFor]="menu">
+                  <i class="bi bi-three-dots-vertical"></i>
                 </button>
-                <div class="cursos-dropdown" [class.abierto]="socio.cursosAbiertos">
-                  @for (curso of socio.cursos; track curso) {
-                    <div class="curso-item">
-                      <i class="bi bi-book"></i> {{ curso }}
-                    </div>
-                  }
-                </div>
-              </div>
-            </td>
-            <td class="text-end">
-              <button class="btn btn-link text-dark p-0" [matMenuTriggerFor]="menu">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-              <mat-menu #menu="matMenu"  >
-                <button mat-menu-item (click)="openAddMember(socio)"><i class="bi bi-pencil-fill me-2"></i> Modificar</button>
-                <button mat-menu-item (click)="onEliminar(socio)"><i class="bi bi-trash3-fill me-2"></i> Eliminar</button>
-                <button mat-menu-item (click)="onCorreo()"><i class="bi bi-envelope me-2"></i> Mandar correo</button>
-              </mat-menu>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="openAddMember(socio)">
+                    <i class="bi bi-pencil-fill me-2"></i> Modificar
+                  </button>
+                  <button mat-menu-item (click)="openCursosMember(socio)">
+                    <i class="bi bi-book me-2"></i> Asignar cursos
+                  </button>
+                  <button mat-menu-item (click)="onEliminar(socio)">
+                    <i class="bi bi-trash3-fill me-2"></i> Eliminar
+                  </button>
+                  <button mat-menu-item (click)="onCorreo()">
+                    <i class="bi bi-envelope me-2"></i> Mandar correo
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 </section>

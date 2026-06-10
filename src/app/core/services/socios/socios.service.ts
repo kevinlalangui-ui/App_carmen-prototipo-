@@ -29,4 +29,10 @@ export class SociosService {
     const { id, ...body } = socio;
   return this.http.patch<any>(`${this.URL}/socio/update?id=${id}`, body);
   }
+  inscribir(socioId: string, actividadId: string, cursoId: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.URL}/socio/inscribir/${socioId}/${actividadId}/${cursoId}`,
+      {}
+    );
+  }
 }

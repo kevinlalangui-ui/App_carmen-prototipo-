@@ -9,7 +9,7 @@
       @for (curso of cursos; track curso.id) {
         @if (estaApuntado(curso)) {
           <div class="curso-activo">
-            <span>{{ curso.nombre }}</span>
+            <span>{{ curso.nombreActividad }} — {{ curso.nombre }}</span>
             <button class="btn-quitar" (click)="toggleCurso(curso)">✕</button>
           </div>
         }
@@ -27,7 +27,9 @@
           [checked]="estaApuntado(curso)"
           (change)="toggleCurso(curso)"
         />
-        <label [for]="'curso-' + curso.id">{{ curso.nombre }}</label>
+        <label [for]="'curso-' + curso.id">
+          {{ curso.nombreActividad }} — {{ curso.nombre }}
+        </label>
       </div>
     }
   </div>

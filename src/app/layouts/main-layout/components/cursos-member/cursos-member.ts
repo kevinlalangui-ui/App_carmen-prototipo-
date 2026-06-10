@@ -6,7 +6,9 @@ import { CursoService } from '../../services/curso.service';
 
 interface CursoItem {
   id: string;
+  actividadId: string;  // ← añadir
   nombre: string;
+  nombreActividad: string;  // ← para mostrar contexto en el dialog
 }
 
 @Component({
@@ -33,8 +35,10 @@ export class CursosMember implements OnInit {
     this.cursoService.getActividades().subscribe((actividades: any[]) => {
       this.cursos = actividades.flatMap((a: any) =>
         (a.cursos ?? []).map((c: any) => ({
-          id:     c.id,
-          nombre: c.nombre_curso ?? '',
+          id:              c.id             ?? '',
+          actividadId:     a.id             ?? '',  // ← añadir
+          nombre:          c.nombre_curso   ?? '',
+          nombreActividad: a.nombre_actividad ?? '',
         }))
       );
     });
@@ -57,6 +61,11 @@ export class CursosMember implements OnInit {
   }
 
   guardar(): void {
-    this.dialogRef.close(Array.from(this.apuntados));
+    // Devuelve array de objetos con actividadId y cursoId
+    const inscripciones = this.cursos
+      .filter(c => this.apuntados.has(c.id))
+      .map(c => ({ actividadId: c.actividadId, cursoId: c.id }));
+
+    this.dialogRef.close(inscripciones);
   }
 }
