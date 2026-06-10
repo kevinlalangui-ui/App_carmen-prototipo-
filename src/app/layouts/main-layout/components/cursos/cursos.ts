@@ -14,6 +14,7 @@ import { ActividadService } from '../../../../core/services/actividad/actividad.
 
 export interface Curso {
   id: string;
+  actividadId: string;
   nombre: string;
   descripcion: string;
   ubicacion: string;
@@ -79,12 +80,12 @@ export class CursosComponent implements OnInit, OnDestroy {
 
   onCheckChange(): void {}
 
-  // Método reutilizable para cargar cursos
   private cargarCursos(): void {
     this.actividadService.getAll().subscribe((actividades: any[]) => {
       this.cursos = actividades.flatMap((a: any) =>
         (a.cursos ?? []).map((c: any) => ({
           id:          c.id                        ?? '',
+          actividadId: a.id                        ?? '',
           nombre:      c.nombre_curso              ?? '',
           descripcion: a.nombre_actividad          ?? '',
           ubicacion:   c.lugar                     ?? '',
@@ -99,14 +100,13 @@ export class CursosComponent implements OnInit, OnDestroy {
         }))
       );
       this.cursosFiltrados = [...this.cursos];
-      this.cdr.detectChanges(); // fuerza re-render
+      this.cdr.detectChanges();
     });
   }
 
   ngOnInit(): void {
     this.cargarCursos();
 
-    // Recarga al volver a esta pestaña desde otra ruta
     this.routerSub = this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => this.cargarCursos());
@@ -153,11 +153,37 @@ export class CursosComponent implements OnInit, OnDestroy {
     this.router.navigate(['/register']);
   }
 
-  onEliminar(): void {
+  onEliminar(curso?: Curso): void {
     const dialogRef = this.dialog.open(DeleteMember, { width: '400px' });
+
     dialogRef.afterClosed().subscribe((confirmed: any) => {
       if (!confirmed) return;
-      console.log('Eliminar — conectar con actividadService.delete()');
+
+      if (curso) {
+        this.actividadService.deleteCurso(curso.actividadId, curso.id).subscribe({
+          next: () => {
+            this.cursos = this.cursos.filter(c => c !== curso);
+            this.cursosFiltrados = this.cursosFiltrados.filter(c => c !== curso);
+          },
+          error: (err: any) => console.error('Error DELETE curso:', err),
+        });
+      } else {
+        const seleccionados = this.cursos.filter(c => c.selected);
+        let completados = 0;
+
+        seleccionados.forEach(c => {
+          this.actividadService.deleteCurso(c.actividadId, c.id).subscribe({
+            next: () => {
+              completados++;
+              if (completados === seleccionados.length) {
+                this.cursos = this.cursos.filter(x => !x.selected);
+                this.cursosFiltrados = this.cursosFiltrados.filter(x => !x.selected);
+              }
+            },
+            error: (err: any) => console.error(`Error DELETE curso ${c.id}:`, err),
+          });
+        });
+      }
     });
   }
 
@@ -174,7 +200,7 @@ export class CursosComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((payload: any) => {
       if (!payload) return;
       this.actividadService.add(payload).subscribe({
-        next: () => this.cargarCursos(), //reutiliza el método
+        next: () => this.cargarCursos(),
         error: (err: any) => console.error('Error ADD actividad:', err),
       });
     });
@@ -183,13 +209,13 @@ export class CursosComponent implements OnInit, OnDestroy {
   submit(): void {
     this.router.navigate(['/main']);
   }
-  onPrestamos() {
+  onPrestamos(): void {
     this.router.navigate(['/prestamos']);
   }
-  onGastos() {
+  onGastos(): void {
     this.router.navigate(['/gastos']);
   }
-  onIngresos() {
+  onIngresos(): void {
     this.router.navigate(['/ingresos']);
   }
 }
