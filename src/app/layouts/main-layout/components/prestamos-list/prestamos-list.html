@@ -1,3 +1,37 @@
+<section id="fondo">
+<div class="header">
+    <img src="header.png" alt="hero" />
+  </div>
+
+
+  <div class="action-bar">
+    <button class="action-bar-btn" (click)="submit()">
+      <i class="bi bi-people"></i>
+      <span>Socios</span>
+    </button>
+    <button class="action-bar-btn" routerLink="/pagos">
+      <i class="bi bi-credit-card" (click)="onGastos(); fabAbierto = false"></i>
+      <span>Pagos</span>
+    </button>
+    <button class="action-bar-btn">
+      <i class="bi bi-file-earmark-text" (click)="onPrestamos(); fabAbierto = false"></i>
+      <span>Prestamos</span>
+    </button>
+    <button class="action-bar-btn active">
+      <i class="bi bi-book"></i>
+      <span>Cursos</span>
+    </button>
+    <button class="action-bar-btn">
+      <i class="bi bi-file-earmark-spreadsheet" (click)="onIngresos(); fabAbierto = false"></i>
+      <span>Presupuestos</span>
+    </button>
+    <button class="action-bar-btn" (click)="goToRegister()">
+      <i class="bi bi-box-arrow-right"></i>
+      <span>Cerrar sesión</span>
+    </button>
+  </div>
+
+
 <div class="prestamos-container">
   <div class="buscar-wrapper">
     <mat-form-field appearance="outline" class="buscar-input">
@@ -197,3 +231,4 @@
     </mat-tab>
   </mat-tab-group>
 </div>
+</section>

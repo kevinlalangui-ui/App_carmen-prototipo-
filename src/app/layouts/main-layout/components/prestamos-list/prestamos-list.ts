@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal, computed,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -35,13 +36,15 @@ export class PrestamosListComponent implements OnInit {
   private prestamoService = inject(PrestamoService);
   private dialog = inject(MatDialog);
   private confirmDialog = inject(ConfirmDialogService);
-  private cdr = inject(ChangeDetectorRef); 
+  private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
 
   todas = signal<Objeto[]>([]);
   prestadas = signal<Objeto[]>([]);
   disponibles = signal<Objeto[]>([]);
   searchTerm = signal('');
+  fabAbierto = false;
 
   todasFiltradas = computed(() =>
     this.todas().filter((h) => h.nombre.toLowerCase().includes(this.searchTerm().toLowerCase())),
@@ -121,4 +124,20 @@ export class PrestamosListComponent implements OnInit {
     const prestamoActivo = objeto.prestamos?.find(p => !p.finPrestamo);
     return prestamoActivo?.entidadAjena || 'No disponible';
   }
+  submit(): void {
+    this.router.navigate(['/main']);
+  }
+  onPrestamos() {
+    this.router.navigate(['/prestamos']);
+  }
+  onGastos() {
+    this.router.navigate(['/gastos']);
+  }
+  onIngresos() {
+    this.router.navigate(['/ingresos']);
+  }
+  goToRegister(): void {
+    this.router.navigate(['/register']);
+  }
 }
+

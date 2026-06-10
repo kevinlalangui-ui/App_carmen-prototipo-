@@ -239,41 +239,52 @@ export class MainLayout implements OnInit {
   }
 
   openAddMember(socio?: Socio): void {
-    if (socio) {
-      const dialogRef = this.dialog.open(ModifyMember, {
-        width: '480px',
-        data: socio,
+  if (socio) {
+    const dialogRef = this.dialog.open(ModifyMember, {
+      width: '480px',
+      data: socio,
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (!result) return;
+      this.sociosService.update({ id: socio.id, ...this.mapToApiSocio(result) }).subscribe({
+        next: () => {
+          const index = this.socios.findIndex((s) => s.id === socio.id);
+          if (index !== -1) {
+            this.socios = [
+              ...this.socios.slice(0, index),
+              { ...socio, ...result },
+              ...this.socios.slice(index + 1),
+            ];
+          }
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => console.error('Error UPDATE socio:', err),
       });
-      dialogRef.afterClosed().subscribe((result: any) => {
-        if (!result) return;
-        this.sociosService.update({ id: socio.id, ...this.mapToApiSocio(result) }).subscribe({
-          next: () => {
-            const index = this.socios.indexOf(socio);
-            if (index !== -1) this.socios[index] = { ...socio, ...result };
-          },
-          error: (err: any) => console.error('Error UPDATE socio:', err),
-        });
-      });
-    } else {
-      const dialogRef = this.dialog.open(AddMember, {
-        width: '480px',
-        data: null,
-      });
-      dialogRef.afterClosed().subscribe((result: any) => {
-        if (!result) return;
-        this.sociosService.guardar(this.mapToApiSocio(result)).subscribe({
-          next: (nuevo: any) => {
-            this.socios.push({
+    });
+  } else {
+    const dialogRef = this.dialog.open(AddMember, {
+      width: '480px',
+      data: null,
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (!result) return;
+      this.sociosService.guardar(this.mapToApiSocio(result)).subscribe({
+        next: (nuevo: any) => {
+          this.socios = [
+            ...this.socios,
+            {
               ...result,
               id: nuevo.id,
               cursosAbiertos: false,
               selected: false,
               cursos: [],
-            });
-          },
-          error: (err: any) => console.error('Error ADD socio:', err),
-        });
+            },
+          ];
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => console.error('Error ADD socio:', err),
       });
+    });
     }
   }
 
@@ -286,13 +297,17 @@ export class MainLayout implements OnInit {
       if (!result) return;
       this.sociosService.guardar(this.mapToApiSocio(result)).subscribe({
         next: (nuevo: any) => {
-          this.socios.push({
-            ...result,
-            id: nuevo.id,
-            cursosAbiertos: false,
-            selected: false,
-            cursos: [],
-          });
+          this.socios = [
+            ...this.socios,
+            {
+              ...result,
+              id: nuevo.id,
+              cursosAbiertos: false,
+              selected: false,
+              cursos: [],
+            },
+          ];
+          this.cdr.detectChanges();
         },
         error: (err: any) => console.error('Error ADD socio (Member):', err),
       });
