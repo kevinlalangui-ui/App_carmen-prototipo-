@@ -3,16 +3,34 @@
 <mat-dialog-content>
   <mat-tab-group>
 
+    <!-- ================= Pestaña Prestar ================= -->
     <mat-tab label="Prestar">
       <div class="tab-content">
-        <div class="campo">
-          <label>Herramienta</label>
-          <select [(ngModel)]="herramientaSeleccionadaId">
-            <option [ngValue]="undefined">-- Selecciona --</option>
-            <option *ngFor="let tool of disponibles" [ngValue]="tool.id">
+        <!-- Buscador con autocomplete -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Buscar herramienta</mat-label>
+          <input
+            type="text"
+            matInput
+            [matAutocomplete]="autoPrestar"
+            [ngModel]="busquedaPrestar()"
+            (ngModelChange)="busquedaPrestar.set($event)"
+            placeholder="Escribe el nombre de la herramienta..."
+          />
+          <button mat-icon-button matSuffix *ngIf="busquedaPrestar()" (click)="limpiarSeleccionPrestar()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-autocomplete #autoPrestar="matAutocomplete" (optionSelected)="onSeleccionarHerramientaPrestar($event)">
+            <mat-option *ngFor="let tool of disponiblesFiltrados()" [value]="tool.nombre">
               {{ tool.nombre }} - {{ tool.descripcion }}
-            </option>
-          </select>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- Campo de solo lectura con la herramienta seleccionada -->
+        <div class="campo">
+          <label>Herramienta seleccionada</label>
+          <input type="text" [value]="herramientaPrestarNombre" disabled placeholder="Ninguna herramienta seleccionada" />
         </div>
 
         <div class="campo">
@@ -35,9 +53,7 @@
             rows="2"
             placeholder="Estado de la herramienta"
           ></textarea>
-          <small class="error" *ngIf="errorAnotacionesPrestamo">{{
-            errorAnotacionesPrestamo
-          }}</small>
+          <small class="error" *ngIf="errorAnotacionesPrestamo">{{ errorAnotacionesPrestamo }}</small>
         </div>
 
         <button
@@ -54,17 +70,34 @@
       </div>
     </mat-tab>
 
-    <!-- Pestaña Devolver -->
+    <!-- ================= Pestaña Devolver ================= -->
     <mat-tab label="Devolver">
       <div class="tab-content">
-        <div class="campo">
-          <label>Herramienta</label>
-          <select [(ngModel)]="herramientaDevueltaId">
-            <option [ngValue]="undefined">-- Selecciona --</option>
-            <option *ngFor="let tool of prestados" [ngValue]="tool.id">
+        <!-- Buscador con autocomplete -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Buscar herramienta</mat-label>
+          <input
+            type="text"
+            matInput
+            [matAutocomplete]="autoDevolver"
+            [ngModel]="busquedaDevolver()"
+            (ngModelChange)="busquedaDevolver.set($event)"
+            placeholder="Escribe el nombre de la herramienta..."
+          />
+          <button mat-icon-button matSuffix *ngIf="busquedaDevolver()" (click)="limpiarSeleccionDevolver()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-autocomplete #autoDevolver="matAutocomplete" (optionSelected)="onSeleccionarHerramientaDevolver($event)">
+            <mat-option *ngFor="let tool of prestadosFiltrados()" [value]="tool.nombre">
               {{ tool.nombre }} - {{ tool.descripcion }}
-            </option>
-          </select>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- Campo de solo lectura con la herramienta seleccionada -->
+        <div class="campo">
+          <label>Herramienta seleccionada</label>
+          <input type="text" [value]="herramientaDevolverNombre" disabled placeholder="Ninguna herramienta seleccionada" />
         </div>
 
         <div class="campo">
@@ -76,9 +109,7 @@
             rows="2"
             placeholder="Cómo se devuelve, si tiene daños"
           ></textarea>
-          <small class="error" *ngIf="errorAnotacionesDevolucion">{{
-            errorAnotacionesDevolucion
-          }}</small>
+          <small class="error" *ngIf="errorAnotacionesDevolucion">{{ errorAnotacionesDevolucion }}</small>
         </div>
 
         <button
@@ -90,6 +121,7 @@
         </button>
       </div>
     </mat-tab>
+
   </mat-tab-group>
 </mat-dialog-content>
 

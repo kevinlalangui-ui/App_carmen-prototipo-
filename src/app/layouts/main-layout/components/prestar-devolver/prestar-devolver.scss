@@ -1,128 +1,229 @@
+// ===== Variables de color (coherentes con main-layout) =====
+$ava-green:      #6CAD6A;
+$ava-green-dark: #4e8a4c;
+$ava-bg:         #e8f5e9;
+$ava-surface:    #ffffff;
+$ava-accent:     #ff7043;
+$bar-bg:         #b2dfdb;
+
+// ===== Estilos del diálogo =====
 :host {
   display: block;
-  background-color: #f5f0e8;
-  border-radius: 12px;
+  background-color: $ava-surface;
+  border-radius: 20px;
   padding: 16px 24px 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-h3 {
+h3[mat-dialog-title] {
   font-weight: 700;
-  color: #1a3a5c;
+  color: $ava-green-dark;
   margin: 0 0 16px 0;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  letter-spacing: -0.3px;
 }
 
+// Contenido de las pestañas
 .tab-content {
   padding: 16px 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
+// Cada campo del formulario
 .campo {
   display: flex;
   flex-direction: column;
   gap: 6px;
 
   label {
-    font-size: 0.9rem;
-    color: #333;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2c3e2f;
+    letter-spacing: 0.3px;
   }
 
-  select,
-  input,
-  textarea {
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 0.95rem;
+  input, textarea, select {
+    border: 1.5px solid #d0e2d0;
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
     font-family: inherit;
-    background: white;
+    background: $ava-surface;
+    transition: all 0.2s ease;
 
     &:focus {
-      border-color: #1a6496;
       outline: none;
+      border-color: $ava-green-dark;
+      box-shadow: 0 0 0 3px rgba($ava-green, 0.2);
+    }
+
+    &.ng-invalid.ng-touched {
+      border-color: #f5a9a9;
+      background-color: #fff9f9;
     }
   }
 
   textarea {
     resize: vertical;
+    min-height: 80px;
+  }
+
+  small.error {
+    color: #c0392b;
+    font-size: 0.7rem;
+    margin-top: 4px;
+    margin-left: 8px;
   }
 }
 
-.btn-prestar {
-  background-color: #1a6496;
-  color: white;
+// ===== MEJORAS DEL BUSCADOR (mat-form-field con autocomplete) =====
+.full-width {
+  width: 100%;
+}
+
+// Estilo personalizado para el mat-form-field de búsqueda
+::ng-deep .full-width .mat-mdc-form-field-flex {
+  background-color: $ava-surface;
+  border-radius: 48px !important;        // Más redondeado
+  padding: 0 12px !important;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+::ng-deep .full-width .mat-mdc-form-field-flex:hover {
+  background-color: #fafdfa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+::ng-deep .full-width .mdc-notched-outline__leading,
+::ng-deep .full-width .mdc-notched-outline__notch,
+::ng-deep .full-width .mdc-notched-outline__trailing {
+  border-color: #cde8cd !important;
+  border-width: 1.5px !important;
+}
+
+::ng-deep .full-width.mat-focused .mdc-notched-outline__leading,
+::ng-deep .full-width.mat-focused .mdc-notched-outline__notch,
+::ng-deep .full-width.mat-focused .mdc-notched-outline__trailing {
+  border-color: $ava-green-dark !important;
+  border-width: 2px !important;
+}
+
+// Icono y botón de limpiar dentro del campo
+::ng-deep .full-width .mat-icon-button {
+  color: #aaa;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: $ava-green-dark;
+  }
+}
+
+// ===== Botones principales =====
+.btn-prestar, .btn-devolver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border: none;
-  border-radius: 6px;
+  border-radius: 40px;
   padding: 10px 20px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: $ava-green;
+  color: white;
   margin-top: 8px;
 
+  &:hover:not(:disabled) {
+    background-color: $ava-green-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
   &:disabled {
-    background-color: #a0bcd4;
+    background-color: #bdd4bd;
     cursor: not-allowed;
+    opacity: 0.7;
   }
 }
 
-.btn-devolver {
-  background-color: #2e7d32;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-
-  &:disabled {
-    background-color: #a0bcd4;
-    cursor: not-allowed;
-  }
-}
-
+// Botón cancelar del diálogo
 mat-dialog-actions {
-  padding-top: 16px;
-  margin-top: 8px;
+  padding: 16px 0 0 0;
+  border-top: 1px solid #eef5ee;
+  margin-top: 16px;
+
+  button {
+    border-radius: 30px;
+    padding: 8px 24px;
+    font-weight: 600;
+    transition: 0.2s;
+
+    &:first-child {
+      background-color: transparent;
+      border: 1.5px solid $ava-green;
+      color: $ava-green-dark;
+
+      &:hover {
+        background-color: rgba($ava-green, 0.1);
+        border-color: $ava-green-dark;
+      }
+    }
+  }
 }
 
+// Mensaje de error
 .error {
-  color: #e53935;
+  color: #c0392b;
   font-size: 0.7rem;
-  margin-top: 4px;
+  margin-top: -10px;
+  margin-bottom: 8px;
   display: block;
 }
 
-/* ===== RESPONSIVE PARA MÓVILES (ancho ≤ 600px) ===== */
+// ===== RESPONSIVE PARA MÓVILES =====
 @media (max-width: 600px) {
   :host {
     padding: 12px 16px;
   }
 
+  h3[mat-dialog-title] {
+    font-size: 1.3rem;
+  }
+
   .tab-content {
-    padding: 8px 0;
-    gap: 12px;
+    gap: 16px;
   }
 
   .campo {
     gap: 4px;
   }
 
-  .btn-prestar,
-  .btn-devolver {
+  .btn-prestar, .btn-devolver {
     width: 100%;
-    padding: 8px 12px;
+    padding: 8px 16px;
   }
 
   mat-dialog-actions {
     flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    gap: 10px;
 
     button {
       width: 100%;
     }
+  }
+
+  // Ajuste del buscador en móvil
+  ::ng-deep .full-width .mat-mdc-form-field-flex {
+    border-radius: 36px !important;
+    padding: 0 10px !important;
   }
 }

@@ -32,9 +32,9 @@
       <i class="bi bi-credit-card me-2"></i>
       <span>Pagos</span>
     </button>
-    <button class="action-bar-btn">
-      <i class="bi bi-file-earmark-text" (click)="onPrestamos(); fabAbierto = false"></i>
-      <span>Prestamos</span>
+    <button class="action-bar-btn" routerLink="/main/prestamos" routerLinkActive="active" (click)="fabAbierto = false">
+      <i class="bi bi-file-earmark-text"></i>
+      <span>Inventario</span>
     </button>
     <button class="action-bar-btn" (click)="cursos(); fabAbierto = false">
       <i class="bi bi-book"></i>
