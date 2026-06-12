@@ -32,28 +32,22 @@ export class PrestarDevolverComponent implements OnInit {
   private prestamoService = inject(PrestamoService);
   private cdr = inject(ChangeDetectorRef);
 
-  // Señales para los datos
   disponibles = signal<Objeto[]>([]);
   prestados = signal<Objeto[]>([]);
 
-  // Señales para los términos de búsqueda (se actualizan con el input)
   busquedaPrestar = signal('');
   busquedaDevolver = signal('');
 
-  // IDs seleccionados (propiedades normales)
   herramientaSeleccionadaId: string | undefined = undefined;
   herramientaDevueltaId: string | undefined = undefined;
 
-  // Nombres seleccionados (propiedades normales, para mostrar en el campo)
   herramientaPrestarNombre = '';
   herramientaDevolverNombre = '';
 
-  // Datos de formulario
   entidadAjena = '';
   anotacionesPrestamo = '';
   anotacionesDevolucion = '';
 
-  // Errores
   errorEntidadAjena = '';
   errorAnotacionesPrestamo = '';
   errorAnotacionesDevolucion = '';
@@ -128,7 +122,6 @@ export class PrestarDevolverComponent implements OnInit {
     });
   }
 
-  // Selección desde el autocomplete (Prestar)
   onSeleccionarHerramientaPrestar(event: any): void {
     const nombre = event.option.value;
     const herramienta = this.disponibles().find(h => h.nombre === nombre);
@@ -139,7 +132,6 @@ export class PrestarDevolverComponent implements OnInit {
     }
   }
 
-  // Selección desde el autocomplete (Devolver)
   onSeleccionarHerramientaDevolver(event: any): void {
     const nombre = event.option.value;
     const herramienta = this.prestados().find(h => h.nombre === nombre);
@@ -150,21 +142,18 @@ export class PrestarDevolverComponent implements OnInit {
     }
   }
 
-  // Limpiar selección (Prestar)
   limpiarSeleccionPrestar(): void {
     this.busquedaPrestar.set('');
     this.herramientaSeleccionadaId = undefined;
     this.herramientaPrestarNombre = '';
   }
 
-  // Limpiar selección (Devolver)
   limpiarSeleccionDevolver(): void {
     this.busquedaDevolver.set('');
     this.herramientaDevueltaId = undefined;
     this.herramientaDevolverNombre = '';
   }
 
-  // Prestar
   prestar(): void {
     this.validarEntidadAjena();
     this.validarAnotacionesPrestamo();
@@ -196,7 +185,6 @@ export class PrestarDevolverComponent implements OnInit {
     });
   }
 
-  // Devolver
   devolver(): void {
     this.validarAnotacionesDevolucion();
     if (!this.herramientaDevueltaId) {

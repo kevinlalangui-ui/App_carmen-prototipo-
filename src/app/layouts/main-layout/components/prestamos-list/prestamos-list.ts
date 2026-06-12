@@ -14,6 +14,8 @@ import { PrestamoService, Objeto } from '../../services/prestamo.service';
 import { AddPrestamo } from '../add-prestamo/add-prestamo';
 import { PrestarDevolverComponent } from '../prestar-devolver/prestar-devolver';
 import { ConfirmDialogService } from '../../../../shared/confirm-dialog.service';
+import { HistorialPrestamosComponent } from '../historial-prestamos/historial-prestamos';
+
 
 @Component({
   selector: 'app-prestamos-list',
@@ -99,6 +101,27 @@ export class PrestamosListComponent implements OnInit {
       }
     });
   }
+  
+  verHistorialGlobal(): void {
+  const todosLosPrestamos: { herramienta: string; prestamo: any }[] = [];
+  this.todas().forEach(objeto => {
+    if (objeto.prestamos && objeto.prestamos.length > 0) {
+      objeto.prestamos.forEach(p => {
+        todosLosPrestamos.push({
+          herramienta: objeto.nombre,
+          prestamo: p
+        });
+      });
+    }
+  });
+  this.dialog.open(HistorialPrestamosComponent, {
+    width: '95vw',
+    maxWidth: '95vw',
+    height: '90vh',
+    maxHeight: '90vh',
+    data: { prestamos: todosLosPrestamos }
+  });
+}
 
   eliminar(nombre: string): void {
     this.confirmDialog
@@ -118,7 +141,6 @@ export class PrestamosListComponent implements OnInit {
       });
   }
 
-  // Devuelve el nombre de la persona/entidad a la que se prestó la herramienta
   getPrestadoA(objeto: Objeto): string {
     // Buscar el préstamo activo (sin fecha de fin)
     const prestamoActivo = objeto.prestamos?.find(p => !p.finPrestamo);

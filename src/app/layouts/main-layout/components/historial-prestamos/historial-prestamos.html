@@ -1,0 +1,45 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>history</mat-icon>
+  {{ titulo }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <div class="tabla-wrapper">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Herramienta</th>
+            <th>Fecha préstamo</th>
+            <th>Prestado a</th>
+            <th>Fecha devolución</th>
+            <th>Anotaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="datosMostrar.length === 0">
+            <td colspan="5" class="text-center">No hay préstamos registrados</td>
+          </tr>
+          <tr *ngFor="let item of datosMostrar">
+            <td>{{ item.herramienta }}</td>
+            <td>{{ item.fechaInicio | date:'dd/MM/yyyy' }}</td>
+            <td>{{ item.entidad }}</td>
+            <td>
+              <span *ngIf="item.fechaFin; else activo">
+                {{ item.fechaFin | date:'dd/MM/yyyy' }}
+              </span>
+              <ng-template #activo>
+                <span class="activo-badge">Activo</span>
+              </ng-template>
+            </td>
+            <td>{{ item.anotaciones || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>
