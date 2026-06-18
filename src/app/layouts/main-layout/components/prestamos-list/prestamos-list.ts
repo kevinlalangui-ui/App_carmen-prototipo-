@@ -101,14 +101,14 @@ export class PrestamosListComponent implements OnInit {
       }
     });
   }
-  
   verHistorialGlobal(): void {
-  const todosLosPrestamos: { herramienta: string; prestamo: any }[] = [];
+  const todosLosPrestamos: { herramienta: string; descripcion: string; prestamo: any }[] = [];
   this.todas().forEach(objeto => {
     if (objeto.prestamos && objeto.prestamos.length > 0) {
       objeto.prestamos.forEach(p => {
         todosLosPrestamos.push({
           herramienta: objeto.nombre,
+          descripcion: objeto.descripcion,
           prestamo: p
         });
       });
@@ -142,10 +142,20 @@ export class PrestamosListComponent implements OnInit {
   }
 
   getPrestadoA(objeto: Objeto): string {
-    // Buscar el préstamo activo (sin fecha de fin)
     const prestamoActivo = objeto.prestamos?.find(p => !p.finPrestamo);
     return prestamoActivo?.entidadAjena || 'No disponible';
   }
+  obtenerAnotacionActiva(objeto: Objeto): string {
+  if (!objeto.prestamos || objeto.prestamos.length === 0) {
+    return 'Sin anotaciones';
+  }
+  const ultimo = objeto.prestamos[objeto.prestamos.length - 1];
+  if (ultimo.finPrestamo) {
+    return ultimo.finPrestamo.anotaciones || 'Sin anotaciones';
+  } else {
+    return ultimo.inicioPrestamo?.anotaciones || 'Sin anotaciones';
+  }
+}
   submit(): void {
     this.router.navigate(['/main']);
   }

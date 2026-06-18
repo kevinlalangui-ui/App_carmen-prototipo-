@@ -128,7 +128,8 @@ $bar-bg:         #b2dfdb;
 }
 
 .btn-add,
-.btn-prestar {
+.btn-prestar,
+.btn-historial {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -245,26 +246,6 @@ tbody {
 .disponible {
   background: rgba($ava-green, 0.15);
   color: $ava-green-dark;
-}
-
-.btn-historial {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 18px;
-  border-radius: 20px;
-  border: 1.5px solid $ava-green;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-  background: $ava-green;
-  color: #fff;
-
-  &:hover {
-    background: $ava-green-dark;
-    border-color: $ava-green-dark;
-  }
 }
 
 .btn-eliminar {

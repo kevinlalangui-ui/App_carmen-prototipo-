@@ -4,12 +4,30 @@
 </h2>
 
 <mat-dialog-content class="dialog-content">
+  <div class="filtro-wrapper">
+    <mat-form-field appearance="outline" class="filtro-input">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Buscar herramienta</mat-label>
+      <input
+        matInput
+        type="text"
+        [ngModel]="filtroBusqueda()"
+        (ngModelChange)="filtroBusqueda.set($event)"
+        placeholder="Ej: martillo, escoba..."
+      />
+      <button mat-icon-button matSuffix *ngIf="filtroBusqueda()" (click)="limpiarFiltro()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
   <div class="tabla-wrapper">
     <div class="table-responsive">
       <table class="table">
         <thead>
           <tr>
             <th>Herramienta</th>
+            <th>Descripción</th>
             <th>Fecha préstamo</th>
             <th>Prestado a</th>
             <th>Fecha devolución</th>
@@ -18,10 +36,13 @@
         </thead>
         <tbody>
           <tr *ngIf="datosMostrar.length === 0">
-            <td colspan="5" class="text-center">No hay préstamos registrados</td>
+            <td colspan="6" class="text-center">
+              {{ filtroBusqueda() ? 'No hay préstamos para la búsqueda' : 'No hay préstamos registrados' }}
+            </td>
           </tr>
           <tr *ngFor="let item of datosMostrar">
             <td>{{ item.herramienta }}</td>
+            <td>{{ item.descripcion }}</td>
             <td>{{ item.fechaInicio | date:'dd/MM/yyyy' }}</td>
             <td>{{ item.entidad }}</td>
             <td>
@@ -32,7 +53,10 @@
                 <span class="activo-badge">Activo</span>
               </ng-template>
             </td>
-            <td>{{ item.anotaciones || '-' }}</td>
+            <td>
+              <div *ngIf="item.anotacionInicio"><strong>Inicio:</strong> {{ item.anotacionInicio }}</div>
+              <div *ngIf="item.anotacionFin"><strong>Devolución:</strong> {{ item.anotacionFin }}</div>
+            </td>
           </tr>
         </tbody>
       </table>
