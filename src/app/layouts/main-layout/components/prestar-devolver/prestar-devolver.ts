@@ -38,11 +38,11 @@ export class PrestarDevolverComponent implements OnInit {
   busquedaPrestar = signal('');
   busquedaDevolver = signal('');
 
-  herramientaSeleccionadaId: string | undefined = undefined;
-  herramientaDevueltaId: string | undefined = undefined;
-
   herramientaPrestarNombre = '';
   herramientaDevolverNombre = '';
+
+  herramientaSeleccionadaId: string | undefined = undefined;
+  herramientaDevueltaId: string | undefined = undefined;
 
   entidadAjena = '';
   anotacionesPrestamo = '';
@@ -52,7 +52,6 @@ export class PrestarDevolverComponent implements OnInit {
   errorAnotacionesPrestamo = '';
   errorAnotacionesDevolucion = '';
 
-  // Computed que filtran las listas según la búsqueda
   disponiblesFiltrados = computed(() => {
     const term = this.busquedaPrestar().toLowerCase().trim();
     if (!term) return this.disponibles();
@@ -65,7 +64,42 @@ export class PrestarDevolverComponent implements OnInit {
     return this.prestados().filter(h => h.nombre.toLowerCase().includes(term));
   });
 
-  // Validaciones
+  get errorHerramientaPrestar(): string {
+    const texto = this.herramientaPrestarNombre.trim();
+    if (!texto) return 'La herramienta es obligatoria';
+    const existe = this.disponibles().some(h => h.nombre.toLowerCase() === texto.toLowerCase());
+    if (!existe) return 'No existe ninguna herramienta con ese nombre';
+    return '';
+  }
+
+  get errorHerramientaDevolver(): string {
+    const texto = this.herramientaDevolverNombre.trim();
+    if (!texto) return 'La herramienta es obligatoria';
+    const existe = this.prestados().some(h => h.nombre.toLowerCase() === texto.toLowerCase());
+    if (!existe) return 'No existe ninguna herramienta con ese nombre';
+    return '';
+  }
+
+  onHerramientaPrestarNombreChange(): void {
+    const nombre = this.herramientaPrestarNombre.trim();
+    if (!nombre) {
+      this.herramientaSeleccionadaId = undefined;
+      return;
+    }
+    const herramienta = this.disponibles().find(h => h.nombre.toLowerCase() === nombre.toLowerCase());
+    this.herramientaSeleccionadaId = herramienta ? herramienta.id : undefined;
+  }
+
+  onHerramientaDevolverNombreChange(): void {
+    const nombre = this.herramientaDevolverNombre.trim();
+    if (!nombre) {
+      this.herramientaDevueltaId = undefined;
+      return;
+    }
+    const herramienta = this.prestados().find(h => h.nombre.toLowerCase() === nombre.toLowerCase());
+    this.herramientaDevueltaId = herramienta ? herramienta.id : undefined;
+  }
+
   validarEntidadAjena(): void {
     if (!this.entidadAjena.trim()) {
       this.errorEntidadAjena = 'El nombre de la persona/entidad es obligatorio';
@@ -122,13 +156,16 @@ export class PrestarDevolverComponent implements OnInit {
     });
   }
 
+  // ===== SELECCIÓN DESDE AUTCOMPLETE CON setTimeout PARA LIMPIAR =====
   onSeleccionarHerramientaPrestar(event: any): void {
     const nombre = event.option.value;
     const herramienta = this.disponibles().find(h => h.nombre === nombre);
     if (herramienta) {
       this.herramientaSeleccionadaId = herramienta.id;
       this.herramientaPrestarNombre = herramienta.nombre;
-      this.busquedaPrestar.set(herramienta.nombre);
+      setTimeout(() => {
+        this.busquedaPrestar.set('');
+      }, 0);
     }
   }
 
@@ -138,7 +175,9 @@ export class PrestarDevolverComponent implements OnInit {
     if (herramienta) {
       this.herramientaDevueltaId = herramienta.id;
       this.herramientaDevolverNombre = herramienta.nombre;
-      this.busquedaDevolver.set(herramienta.nombre);
+      setTimeout(() => {
+        this.busquedaDevolver.set('');
+      }, 0);
     }
   }
 
@@ -158,9 +197,11 @@ export class PrestarDevolverComponent implements OnInit {
     this.validarEntidadAjena();
     this.validarAnotacionesPrestamo();
 
-    if (this.errorEntidadAjena || this.errorAnotacionesPrestamo) return;
+    if (this.errorHerramientaPrestar || this.errorEntidadAjena || this.errorAnotacionesPrestamo) {
+      return;
+    }
     if (!this.herramientaSeleccionadaId) {
-      alert('Debes seleccionar una herramienta');
+      alert('Debes seleccionar una herramienta de la lista');
       return;
     }
 
@@ -187,8 +228,12 @@ export class PrestarDevolverComponent implements OnInit {
 
   devolver(): void {
     this.validarAnotacionesDevolucion();
+
+    if (this.errorHerramientaDevolver || this.errorAnotacionesDevolucion) {
+      return;
+    }
     if (!this.herramientaDevueltaId) {
-      alert('Debes seleccionar una herramienta');
+      alert('Debes seleccionar una herramienta de la lista');
       return;
     }
 
