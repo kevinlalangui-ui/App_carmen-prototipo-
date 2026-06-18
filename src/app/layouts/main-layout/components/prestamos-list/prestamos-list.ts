@@ -1,6 +1,5 @@
-import { Component, inject, OnInit, signal, computed,ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -15,7 +14,6 @@ import { AddPrestamo } from '../add-prestamo/add-prestamo';
 import { PrestarDevolverComponent } from '../prestar-devolver/prestar-devolver';
 import { ConfirmDialogService } from '../../../../shared/confirm-dialog.service';
 import { HistorialPrestamosComponent } from '../historial-prestamos/historial-prestamos';
-
 
 @Component({
   selector: 'app-prestamos-list',
@@ -32,36 +30,35 @@ import { HistorialPrestamosComponent } from '../historial-prestamos/historial-pr
     MatInputModule,
   ],
   templateUrl: './prestamos-list.html',
-  styleUrl: './prestamos-list.scss',
+  styleUrls: ['./prestamos-list.scss'],
 })
 export class PrestamosListComponent implements OnInit {
   private prestamoService = inject(PrestamoService);
   private dialog = inject(MatDialog);
   private confirmDialog = inject(ConfirmDialogService);
   private cdr = inject(ChangeDetectorRef);
-  private router = inject(Router);
-
 
   todas = signal<Objeto[]>([]);
   prestadas = signal<Objeto[]>([]);
   disponibles = signal<Objeto[]>([]);
   searchTerm = signal('');
-  fabAbierto = false;
 
   todasFiltradas = computed(() =>
-    this.todas().filter((h) => h.nombre.toLowerCase().includes(this.searchTerm().toLowerCase())),
+    this.todas().filter((h) =>
+      h.nombre.toLowerCase().includes(this.searchTerm().toLowerCase())
+    )
   );
 
   prestadasFiltradas = computed(() =>
     this.prestadas().filter((h) =>
-      h.nombre.toLowerCase().includes(this.searchTerm().toLowerCase()),
-    ),
+      h.nombre.toLowerCase().includes(this.searchTerm().toLowerCase())
+    )
   );
 
   disponiblesFiltradas = computed(() =>
     this.disponibles().filter((h) =>
-      h.nombre.toLowerCase().includes(this.searchTerm().toLowerCase()),
-    ),
+      h.nombre.toLowerCase().includes(this.searchTerm().toLowerCase())
+    )
   );
 
   ngOnInit(): void {
@@ -87,7 +84,7 @@ export class PrestamosListComponent implements OnInit {
   abrirAddPrestamo(): void {
     const dialogRef = this.dialog.open(AddPrestamo, { width: '500px' });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result){
+      if (result) {
         setTimeout(() => this.cargarDatos());
       }
     });
@@ -101,27 +98,28 @@ export class PrestamosListComponent implements OnInit {
       }
     });
   }
+
   verHistorialGlobal(): void {
-  const todosLosPrestamos: { herramienta: string; descripcion: string; prestamo: any }[] = [];
-  this.todas().forEach(objeto => {
-    if (objeto.prestamos && objeto.prestamos.length > 0) {
-      objeto.prestamos.forEach(p => {
-        todosLosPrestamos.push({
-          herramienta: objeto.nombre,
-          descripcion: objeto.descripcion,
-          prestamo: p
+    const todosLosPrestamos: { herramienta: string; descripcion: string; prestamo: any }[] = [];
+    this.todas().forEach((objeto) => {
+      if (objeto.prestamos && objeto.prestamos.length > 0) {
+        objeto.prestamos.forEach((p) => {
+          todosLosPrestamos.push({
+            herramienta: objeto.nombre,
+            descripcion: objeto.descripcion,
+            prestamo: p,
+          });
         });
-      });
-    }
-  });
-  this.dialog.open(HistorialPrestamosComponent, {
-    width: '95vw',
-    maxWidth: '95vw',
-    height: '90vh',
-    maxHeight: '90vh',
-    data: { prestamos: todosLosPrestamos }
-  });
-}
+      }
+    });
+    this.dialog.open(HistorialPrestamosComponent, {
+      width: '95vw',
+      maxWidth: '95vw',
+      height: '90vh',
+      maxHeight: '90vh',
+      data: { prestamos: todosLosPrestamos },
+    });
+  }
 
   eliminar(nombre: string): void {
     this.confirmDialog
@@ -142,34 +140,19 @@ export class PrestamosListComponent implements OnInit {
   }
 
   getPrestadoA(objeto: Objeto): string {
-    const prestamoActivo = objeto.prestamos?.find(p => !p.finPrestamo);
+    const prestamoActivo = objeto.prestamos?.find((p) => !p.finPrestamo);
     return prestamoActivo?.entidadAjena || 'No disponible';
   }
-  obtenerAnotacionActiva(objeto: Objeto): string {
-  if (!objeto.prestamos || objeto.prestamos.length === 0) {
-    return 'Sin anotaciones';
-  }
-  const ultimo = objeto.prestamos[objeto.prestamos.length - 1];
-  if (ultimo.finPrestamo) {
-    return ultimo.finPrestamo.anotaciones || 'Sin anotaciones';
-  } else {
-    return ultimo.inicioPrestamo?.anotaciones || 'Sin anotaciones';
-  }
-}
-  submit(): void {
-    this.router.navigate(['/main']);
-  }
-  onPrestamos() {
-    this.router.navigate(['/prestamos']);
-  }
-  onGastos() {
-    this.router.navigate(['/gastos']);
-  }
-  onIngresos() {
-    this.router.navigate(['/ingresos']);
-  }
-  goToRegister(): void {
-    this.router.navigate(['/register']);
-  }
-}
 
+  obtenerAnotacionActiva(objeto: Objeto): string {
+    if (!objeto.prestamos || objeto.prestamos.length === 0) {
+      return 'Sin anotaciones';
+    }
+    const ultimo = objeto.prestamos[objeto.prestamos.length - 1];
+    if (ultimo.finPrestamo) {
+      return ultimo.finPrestamo.anotaciones || 'Sin anotaciones';
+    } else {
+      return ultimo.inicioPrestamo?.anotaciones || 'Sin anotaciones';
+    }
+  }
+}

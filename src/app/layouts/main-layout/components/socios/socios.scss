@@ -1,3 +1,4 @@
+// Variables de color (coherentes con el layout principal)
 $ava-green:      #6CAD6A;
 $ava-green-dark: #4e8a4c;
 $ava-bg:         #e8f5e9;
@@ -48,12 +49,13 @@ $bar-bg:         #b2dfdb;
   }
 
   &.tbtn-eliminar {
-    background: #fff;
-    color: #c0392b;
-    border-color: #e0a0a0;
+    background: #c0392b;
+    color: #fff;
+    border-color: #a93226;
 
     &:hover:not(:disabled) {
-      background: #fdecea;
+      background: #a93226;
+      border-color: #922b21;
     }
   }
 }

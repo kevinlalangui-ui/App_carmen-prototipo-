@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { GastoIngresoService, Gasto } from '../../services/gasto-ingreso.service';
 import { AddGastoComponent } from '../add-gasto/add-gasto';
 import { ConfirmDialogService } from '../../../../shared/confirm-dialog.service';
@@ -34,14 +34,12 @@ export class ListaGastosComponent implements OnInit {
   private gastoService  = inject(GastoIngresoService);
   private dialog        = inject(MatDialog);
   private confirmDialog = inject(ConfirmDialogService);
-  private router        = inject(Router);
   private cdr           = inject(ChangeDetectorRef);
 
   gastos     = signal<Gasto[]>([]);
   searchTerm = signal('');
   cargando   = false;
   errorCarga: string | null = null;
-  fabAbierto = false;
 
   displayedColumns: string[] = ['fecha', 'descripcion', 'monto', 'acciones'];
 
@@ -58,23 +56,23 @@ export class ListaGastosComponent implements OnInit {
   }
 
   cargarGastos(): void {
-  this.cargando = true;
-  this.errorCarga = null;
+    this.cargando = true;
+    this.errorCarga = null;
 
-  this.gastoService.getGastos().subscribe({
-    next: (data) => {
-      this.gastos.set(data);
-      this.cargando = false;
-      this.cdr.detectChanges();
-    },
-    error: (err: any) => {
-      console.error('Error GET /gastos/all:', err);
-      this.errorCarga = 'No se pudo cargar la lista de gastos.';
-      this.cargando = false;
-      this.cdr.detectChanges();
-    },
-  });
-}
+    this.gastoService.getGastos().subscribe({
+      next: (data) => {
+        this.gastos.set(data);
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error GET /gastos/all:', err);
+        this.errorCarga = 'No se pudo cargar la lista de gastos.';
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   abrirAddGasto(): void {
     const dialogRef = this.dialog.open(AddGastoComponent, { width: '450px' });
@@ -88,26 +86,22 @@ export class ListaGastosComponent implements OnInit {
   }
 
   eliminarGasto(id: string | undefined, descripcion: string, monto: number): void {
-  if (!id) return;
-  this.confirmDialog.confirm({
-    title:       'Eliminar gasto',
-    message:     `¿Eliminar el gasto "${descripcion}" de ${monto}€?`,
-    confirmText: 'Sí, eliminar',
-    cancelText:  'Cancelar',
-  }).subscribe((confirmed) => {
-    if (!confirmed) return;
-    this.gastoService.deleteGasto(id).subscribe({
-      next: () => this.gastos.update(lista => lista.filter(g => g.id !== id)),
-      error: (err) => console.error('Error eliminando gasto:', err),
+    if (!id) return;
+    this.confirmDialog.confirm({
+      title:       'Eliminar gasto',
+      message:     `¿Eliminar el gasto "${descripcion}" de ${monto}€?`,
+      confirmText: 'Sí, eliminar',
+      cancelText:  'Cancelar',
+    }).subscribe((confirmed) => {
+      if (!confirmed) return;
+      this.gastoService.deleteGasto(id).subscribe({
+        next: () => this.gastos.update(lista => lista.filter(g => g.id !== id)),
+        error: (err) => console.error('Error eliminando gasto:', err),
+      });
     });
-  });
-}
+  }
 
-  clearSearch(): void { this.searchTerm.set(''); }
-  submit():     void  { this.router.navigate(['/main']); }
-  onPrestamos():void  { this.router.navigate(['/prestamos']); }
-  onGastos():   void  { this.router.navigate(['/gastos']); }
-  onIngresos(): void  { this.router.navigate(['/ingresos']); }
-  cursos():     void  { this.router.navigate(['/cursos']); }
-  goToRegister():void { this.router.navigate(['/register']); }
+  clearSearch(): void {
+    this.searchTerm.set('');
+  }
 }

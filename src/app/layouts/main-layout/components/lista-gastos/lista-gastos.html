@@ -1,86 +1,50 @@
-<section id="fondo">
-  <div class="header">
-    <img src="header.png" alt="hero" />
-  </div>
-
-
-  <div class="action-bar">
-    <button class="action-bar-btn" (click)="submit(); fabAbierto = false">
-      <i class="bi bi-people"></i>
-      <span>Socios</span>
-    </button>
-    <button class="action-bar-btn danger" (click)="onGastos(); fabAbierto = false">
-      <i class="bi bi-credit-card"></i>
-      <span>Pagos</span>
-    </button>
-    <button class="action-bar-btn">
-      <i class="bi bi-file-earmark-text" (click)="onPrestamos(); fabAbierto = false"></i>
-      <span>Prestamos</span>
-    </button>
-    <button class="action-bar-btn" (click)="cursos(); fabAbierto = false">
-      <i class="bi bi-book"></i>
-      <span>Cursos</span>
-    </button>
-    <button class="action-bar-btn">
-      <i class="bi bi-file-earmark-spreadsheet" (click)="onIngresos(); fabAbierto = false"></i>
-      <span>Presupuestos</span>
-    </button>
-    <button class="action-bar-btn" (click)="goToRegister()">
-      <i class="bi bi-box-arrow-right"></i>
-      <span>Cerrar sesión</span>
+<div class="gastos-container">
+  <div class="gastos-toolbar">
+    <div class="gastos-titulo">
+      <i class="bi bi-cash-coin"></i>
+      <h2>Gastos</h2>
+    </div>
+    <button class="tbtn tbtn-add" (click)="abrirAddGasto()">
+      <i class="bi bi-plus-lg"></i>
+      Añadir gasto
     </button>
   </div>
 
-  <div class="gastos-container">
-
-    <div class="gastos-toolbar">
-      <div class="gastos-titulo">
-        <i class="bi bi-cash-coin"></i>
-        <h2>Gastos</h2>
-      </div>
-      <button class="tbtn tbtn-add" (click)="abrirAddGasto()">
-        <i class="bi bi-plus-lg"></i>
-        Añadir gasto
-      </button>
+  <div class="buscador-wrapper">
+    <div class="caja-buscador">
+      <i class="bi bi-search"></i>
+      <input
+        class="buscador"
+        type="text"
+        placeholder="Buscar por fecha o descripción..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+      @if (searchTerm()) {
+        <button class="btn-expandir" (click)="clearSearch()">
+          <i class="bi bi-x"></i>
+        </button>
+      }
     </div>
+  </div>
 
-
-    <div class="buscador-wrapper">
-      <div class="caja-buscador">
-        <i class="bi bi-search"></i>
-        <input
-          class="buscador"
-          type="text"
-          placeholder="Buscar por fecha o descripción..."
-          [value]="searchTerm()"
-          (input)="searchTerm.set($any($event.target).value)"
-        />
-        @if (searchTerm()) {
-          <button class="btn-expandir" (click)="clearSearch()">
-            <i class="bi bi-x"></i>
-          </button>
-        }
-      </div>
-    </div>
-    @if (cargando) {
+  @if (cargando) {
     <div class="loading-state">
       <div class="spinner"></div>
       <p>Cargando gastos...</p>
     </div>
-    }
+  }
 
-
-    @if (errorCarga) {
+  @if (errorCarga) {
     <div class="error-state">
       <p>{{ errorCarga }}</p>
       <button (click)="cargarGastos()">Reintentar</button>
     </div>
-    }
+  }
 
-    @if (!cargando && !errorCarga) {
+  @if (!cargando && !errorCarga) {
     <div class="tabla-wrapper">
       <table mat-table [dataSource]="gastosFiltrados()">
-
         <ng-container matColumnDef="fecha">
           <th mat-header-cell *matHeaderCellDef>Fecha</th>
           <td mat-cell *matCellDef="let item">{{ item.fechaGasto }}</td>
@@ -99,10 +63,7 @@
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let item">
-            <button
-              class="tbtn tbtn-eliminar"
-              (click)="eliminarGasto(item.id, item.descripcion, item.monto)"
-            >
+            <button class="tbtn tbtn-eliminar" (click)="eliminarGasto(item.id, item.descripcion, item.monto)">
               <i class="bi bi-trash3"></i>
               Eliminar
             </button>
@@ -113,6 +74,5 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>
-    }
-  </div>
-</section>
+  }
+</div>

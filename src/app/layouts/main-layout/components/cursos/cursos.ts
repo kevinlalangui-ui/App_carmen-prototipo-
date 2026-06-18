@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +6,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { Subscription, filter } from 'rxjs';
 import { DeleteMember } from '../delete-member/delete-member';
 import { AddCurso } from '../add-curso/add-curso';
 import { ActividadService } from '../../../../core/services/actividad/actividad.service';
@@ -42,14 +40,11 @@ export interface Curso {
     MatIconModule,
   ],
 })
-export class CursosComponent implements OnInit, OnDestroy {
-  private router = inject(Router);
+export class CursosComponent implements OnInit {
   private dialog = inject(MatDialog);
   private actividadService = inject(ActividadService);
   private cdr = inject(ChangeDetectorRef);
-  private routerSub!: Subscription;
 
-  fabAbierto = false;
   filtrosAbiertos = false;
   textoBusqueda = '';
 
@@ -106,14 +101,6 @@ export class CursosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cargarCursos();
-
-    this.routerSub = this.router.events
-      .pipe(filter((e) => e instanceof NavigationEnd))
-      .subscribe(() => this.cargarCursos());
-  }
-
-  ngOnDestroy(): void {
-    this.routerSub?.unsubscribe();
   }
 
   filtrarCursos(): void {
@@ -147,10 +134,6 @@ export class CursosComponent implements OnInit, OnDestroy {
   toggleChip(filtro: { label: string; activo: boolean }): void {
     filtro.activo = !filtro.activo;
     this.filtrarCursos();
-  }
-
-  goToRegister(): void {
-    this.router.navigate(['/register']);
   }
 
   onEliminar(curso?: Curso): void {
@@ -204,18 +187,5 @@ export class CursosComponent implements OnInit, OnDestroy {
         error: (err: any) => console.error('Error ADD actividad:', err),
       });
     });
-  }
-
-  submit(): void {
-    this.router.navigate(['/main']);
-  }
-  onPrestamos(): void {
-    this.router.navigate(['/prestamos']);
-  }
-  onGastos(): void {
-    this.router.navigate(['/gastos']);
-  }
-  onIngresos(): void {
-    this.router.navigate(['/ingresos']);
   }
 }

@@ -1,73 +1,43 @@
-<section id="fondo">
-  <div class="header">
-    <img src="header.png" alt="hero" />
-  </div>
-  <div class="action-bar">
-    <button class="action-bar-btn" (click)="submit()">
-      <i class="bi bi-people"></i>
-      <span>Socios</span>
-    </button>
-    <button class="action-bar-btn" (click)="onGastos()">
-      <i class="bi bi-credit-card"></i>
-      <span>Pagos</span>
-    </button>
-    <button class="action-bar-btn" (click)="onPrestamos()">
-      <i class="bi bi-file-earmark-text"></i>
-      <span>Prestamos</span>
-    </button>
-    <button class="action-bar-btn" (click)="cursos()">
-      <i class="bi bi-book"></i>
-      <span>Cursos</span>
-    </button>
-    <button class="action-bar-btn active">
-      <i class="bi bi-file-earmark-spreadsheet"></i>
-      <span>Presupuestos</span>
-    </button>
-    <button class="action-bar-btn" (click)="goToRegister()">
-      <i class="bi bi-box-arrow-right"></i>
-      <span>Cerrar sesión</span>
+<div class="toolbar-secundaria">
+  <div class="toolbar-acciones">
+    <button class="tbtn tbtn-add" (click)="abrirAddIngreso()">
+      <i class="bi bi-plus-lg"></i>
+      Añadir ingreso
     </button>
   </div>
 
-  <div class="toolbar-secundaria">
-    <div class="toolbar-acciones">
-      <button class="tbtn tbtn-add" (click)="abrirAddIngreso()">
-        <i class="bi bi-plus-lg"></i>
-        Añadir ingreso
+  <div class="buscador-wrapper">
+    <div class="caja-buscador">
+      <i class="bi bi-search"></i>
+      <input
+        class="buscador"
+        type="text"
+        placeholder="Buscar por fecha o descripción..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+      <button class="btn-expandir" *ngIf="searchTerm()" (click)="clearSearch()">
+        <i class="bi bi-x"></i>
       </button>
     </div>
-
-    <div class="buscador-wrapper">
-      <div class="caja-buscador">
-        <i class="bi bi-search"></i>
-        <input
-          class="buscador"
-          type="text"
-          placeholder="Buscar por fecha o descripción..."
-          [value]="searchTerm()"
-          (input)="searchTerm.set($any($event.target).value)" />
-        <button class="btn-expandir" *ngIf="searchTerm()" (click)="clearSearch()">
-          <i class="bi bi-x"></i>
-        </button>
-      </div>
-    </div>
   </div>
+</div>
 
-  @if (cargando) {
+@if (cargando) {
   <div class="loading-state">
     <div class="spinner"></div>
     <p>Cargando Ingresos...</p>
   </div>
-  }
+}
 
-
-  @if (errorCarga) {
+@if (errorCarga) {
   <div class="error-state">
     <p>{{ errorCarga }}</p>
     <button (click)="cargarIngresos()">Reintentar</button>
   </div>
-  }
-  @if (!cargando && !errorCarga) {
+}
+
+@if (!cargando && !errorCarga) {
   <div class="container mt-3">
     <table class="table">
       <thead>
@@ -104,6 +74,4 @@
       </tbody>
     </table>
   </div>
-  }
-
-</section>
+}
