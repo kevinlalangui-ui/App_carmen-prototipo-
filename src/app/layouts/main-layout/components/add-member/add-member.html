@@ -26,14 +26,14 @@
     <mat-form-field appearance="outline">
       <input matInput formControlName="email" id="email" name="email" type="email" placeholder="Email" />
       @if (form.get('email')?.touched) {
-        @if (form.get('email')?.errors?.['required']) {
-          <mat-error>El correo es obligatorio</mat-error>
-        }
         @if (form.get('email')?.errors?.['extension']) {
           <mat-error>Solo aceptamos gmail y hotmail</mat-error>
         }
         @if (form.get('email')?.errors?.['customEmail']) {
           <mat-error>Correo no válido</mat-error>
+        }
+        @if (form.errors?.['telefonoOEmail'] && !form.get('phone')?.value) {
+          <mat-error>Debes indicar email o teléfono</mat-error>
         }
       }
     </mat-form-field>
@@ -42,6 +42,9 @@
       @if (form.get('phone')?.touched) {
         @if (form.get('phone')?.errors?.['required']) {
           <mat-error>El teléfono es obligatorio</mat-error>
+        }
+        @if (form.errors?.['telefonoOEmail'] && !form.get('email')?.value) {
+          <mat-error>Debes indicar teléfono o email</mat-error>
         }
       }
     </mat-form-field>
@@ -68,12 +71,10 @@
 <mat-dialog-actions align="end">
   <button
     type="button"
-    class="btn-estado"
-    [class.btn-activo]="form.get('activo')?.value"
-    [class.btn-inactivo]="!form.get('activo')?.value"
-    (click)="form.get('activo')?.setValue(!form.get('activo')?.value)">
+    class="btn-estado btn-activo"
+    disabled>
     <span class="dot-estado"></span>
-    {{ form.get('activo')?.value ? 'Activo' : 'Inactivo' }}
+    Activo
   </button>
   <button class="btn-activate" (click)="guardar()">Guardar</button>
 </mat-dialog-actions>

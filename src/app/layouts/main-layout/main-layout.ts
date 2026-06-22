@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { AddMember } from './components/add-member/add-member';
 import { ModifyMember } from './components/modify-member/modify-member';
@@ -40,6 +41,7 @@ interface Socio {
     MatMenuModule,
     MatIconModule,
     MatChipsModule,
+    MatSnackBarModule,
     CommonModule,
     FormsModule,
     RouterModule,
@@ -53,6 +55,7 @@ export class MainLayout implements OnInit {
   private sociosService    = inject(SociosService);
   private actividadService = inject(ActividadService);
   private cdr             = inject(ChangeDetectorRef);
+  private snackBar        = inject(MatSnackBar);
 
   filtrosAbiertos = false;
   sortColumn: 'nombres' | 'apellidos' | null = null;
@@ -174,17 +177,15 @@ export class MainLayout implements OnInit {
       const palabras = normalizar(this.textoBusqueda).trim().split(/\s+/);
 
       lista = lista.filter((s) => {
-        // Campos individuales normalizados
         const campos = [
           s.nombres,
           s.apellidos,
           s.correo,
           s.dni,
           s.tel,
-          ...s.cursos,          // cada curso como campo separado
+          ...s.cursos,
         ].map(normalizar);
 
-        // Cada palabra debe aparecer en AL MENOS UNO de los campos
         return palabras.every((palabra) =>
           campos.some((campo) => campo.includes(palabra))
         );
@@ -193,6 +194,7 @@ export class MainLayout implements OnInit {
 
     return lista;
   }
+
   get allSelected(): boolean {
     return this.sociosFiltrados.length > 0 && this.sociosFiltrados.every((s) => s.selected);
   }
@@ -289,6 +291,11 @@ export class MainLayout implements OnInit {
                 cursos: [],
               },
             ];
+            this.snackBar.open('👍 Socio guardado con éxito', '', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+            });
             this.cdr.detectChanges();
           },
           error: (err: any) => console.error('Error ADD socio:', err),
@@ -316,6 +323,11 @@ export class MainLayout implements OnInit {
               cursos: [],
             },
           ];
+          this.snackBar.open('👍 Socio guardado con éxito', '', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
           this.cdr.detectChanges();
         },
         error: (err: any) => console.error('Error ADD socio (Member):', err),
