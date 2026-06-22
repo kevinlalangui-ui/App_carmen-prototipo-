@@ -89,13 +89,13 @@ export class SociosComponent implements OnInit {
       next: (data: any[]) => {
         this.socios = (data ?? []).map((s: any) => this.mapearSocio(s));
         this.cargando = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err: any) => {
         console.error('Error GET /socio/all:', err);
         this.errorCarga = 'No se pudo cargar la lista de socios.';
         this.cargando = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
     });
   }

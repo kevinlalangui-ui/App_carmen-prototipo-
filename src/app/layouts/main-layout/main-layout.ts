@@ -34,17 +34,41 @@ export class MainLayout {
     this.router.navigate(['/register']);
   }
 
-  openMember(): void {
+   openMember(): void {
     const dialogRef = this.dialog.open(AddMember, {
       width: '480px',
       data: null,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Socio creado, recargar lista si es necesario');
+        const socioData = {
+          informacion_personal: {
+            nombres: result.nombres,
+            apellidos: result.apellidos,
+            correo: result.correo,
+            telefono: result.tel,
+            identificacion: result.dni,
+            contrasena: null,
+            numero_fiscal: null,
+          },
+          es_activo: result.estado === 'Activo',
+          tipo_socio: result.profesor === 'Si' ? ['PROFESOR'] : ['REGULAR'],
+          cuotas: [],
+          fecha_vencimiento: null,
+          actividades: {},
+        };
+        this.sociosService.guardar(socioData).subscribe({
+          next: (nuevo) => {
+            console.log('Socio guardado correctamente:', nuevo);
+          },
+          error: (err) => {
+            console.error('Error al guardar socio:', err);
+          },
+        });
       }
     });
   }
+
 
   openAddCurso(): void {
     const dialogRef = this.dialog.open(AddCurso, {
