@@ -113,7 +113,6 @@
                    [indeterminate]="someSelected"
                    (change)="toggleAll($event)" />
           </th>
-          <th>ID socio</th>
           <th style="cursor:pointer" (click)="sortBy('nombres')">
             Nombres
             @if (sortColumn === 'nombres') {
@@ -149,7 +148,6 @@
               <td>
                 <input type="checkbox" [(ngModel)]="socio.selected" (change)="onCheckChange()" />
               </td>
-              <td>{{ socio.id }}</td>
               <td>{{ socio.nombres }}</td>
               <td>{{ socio.apellidos }}</td>
               <td>{{ socio.correo }}</td>

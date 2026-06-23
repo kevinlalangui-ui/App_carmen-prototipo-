@@ -89,94 +89,91 @@
   <div class="container mt-3">
     <table class="table">
       <thead>
-        <tr>
-          <th style="width: 40px;">
-            <input type="checkbox"
-              [checked]="allSelected"
-              [indeterminate]="someSelected"
-              (change)="toggleAll($event)" />
-          </th>
-          <th>ID CursoService</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Ubicación</th>
-          <th>Profesor</th>
-          <th>Horario</th>
-          <th>Plazas</th>
-          <th>Estado</th>
-          <th class="text-end"><i class="bi bi-cloud-arrow-down-fill"></i></th>
-        </tr>
+      <tr>
+        <th style="width: 40px;">
+          <input type="checkbox"
+                 [checked]="allSelected"
+                 [indeterminate]="someSelected"
+                 (change)="toggleAll($event)" />
+        </th>
+        <th>Actividad / Curso</th>
+        <th>Ubicación</th>
+        <th>Profesor</th>
+        <th>Horario</th>
+        <th>Plazas</th>
+        <th>Estado</th>
+        <th class="text-end"><i class="bi bi-cloud-arrow-down-fill"></i></th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let curso of cursosFiltrados" [class.fila-seleccionada]="curso.selected">
-          <td>
-            <input type="checkbox" [(ngModel)]="curso.selected" (change)="onCheckChange()" />
-          </td>
-          <td>{{ curso.id }}</td>
-          <td class="fw-semibold">{{ curso.nombre }}</td>
-          <td class="text-muted" style="font-size: 0.85rem;">{{ curso.descripcion }}</td>
-          <td>
-            <div class="d-flex align-items-center gap-1">
-              <i class="bi bi-geo-alt-fill text-success"></i>
-              {{ curso.ubicacion }}
-            </div>
-          </td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <div class="avatar-profesor">{{ curso.profesor ? curso.profesor.charAt(0) : '?' }}</div>
-              {{ curso.profesor }}
-            </div>
-          </td>
-          <td>
-            <div>{{ curso.horario }}</div>
-            <small class="text-muted" style="font-size: 0.7rem;">{{ curso.dias }}</small>
-          </td>
-          <td>
-            <div class="plazas-wrap">
-              <div class="plazas-bar">
-                <div class="plazas-fill"
-                  [style.width.%]="(curso.inscritos / curso.plazas) * 100"
-                  [class.lleno]="curso.inscritos >= curso.plazas">
-                </div>
-              </div>
-              <small>{{ curso.inscritos }}/{{ curso.plazas }}</small>
-            </div>
-          </td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <div class="estado-dot"
-                [style.background-color]="curso.activo ? '#6CAD6A' : '#aaa'">
-              </div>
-              <div>
-                <div class="fw-bold" style="line-height:1;">{{ curso.activo ? 'Activo' : 'Inactivo' }}</div>
-                <small class="text-muted" style="font-size:0.7rem;">{{ curso.fechaFin }}</small>
+      <tr *ngFor="let curso of cursosFiltrados" [class.fila-seleccionada]="curso.selected">
+        <td>
+          <input type="checkbox" [(ngModel)]="curso.selected" (change)="onCheckChange()" />
+        </td>
+        <td>
+          <span class="tag-actividad">{{ curso.descripcion }}</span>
+          <span class="separador"> — </span>
+          <span class="tag-curso">{{ curso.nombre }}</span>
+        </td>
+        <td>
+          <div class="d-flex align-items-center gap-1">
+            <i class="bi bi-geo-alt-fill text-success"></i>
+            {{ curso.ubicacion }}
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <div class="avatar-profesor">{{ curso.profesor ? curso.profesor.charAt(0) : '?' }}</div>
+            {{ curso.profesor }}
+          </div>
+        </td>
+        <td>
+          <div>{{ curso.horario }}</div>
+          <small class="text-muted" style="font-size: 0.7rem;">{{ curso.dias }}</small>
+        </td>
+        <td>
+          <div class="plazas-wrap">
+            <div class="plazas-bar">
+              <div class="plazas-fill"
+                   [style.width.%]="(curso.inscritos / curso.plazas) * 100"
+                   [class.lleno]="curso.inscritos >= curso.plazas">
               </div>
             </div>
-          </td>
-          <td class="text-end">
-            <button class="btn btn-link text-dark p-0" [matMenuTriggerFor]="menu">
-              <i class="bi bi-three-dots-vertical"></i>
+            <small>{{ curso.inscritos }}/{{ curso.plazas }}</small>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <div class="estado-dot"
+                 [style.background-color]="curso.activo ? '#6CAD6A' : '#aaa'">
+            </div>
+            <div>
+              <div class="fw-bold" style="line-height:1;">{{ curso.activo ? 'Activo' : 'Inactivo' }}</div>
+              <small class="text-muted" style="font-size:0.7rem;">{{ curso.fechaFin }}</small>
+            </div>
+          </div>
+        </td>
+        <td class="text-end">
+          <button class="btn btn-link text-dark p-0" [matMenuTriggerFor]="menu">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <i class="bi bi-people me-2"></i> Ver socios
             </button>
-            <mat-menu #menu="matMenu">
-<!--              <button mat-menu-item >-->
-<!--                <i class="bi bi-pencil-fill me-2"></i> Modificar-->
-<!--              </button>-->
-              <button mat-menu-item>
-                <i class="bi bi-people me-2"></i> Ver socios
-              </button>
-              <button mat-menu-item (click)="onEliminar(curso)">
-                <i class="bi bi-trash3-fill me-2"></i> Eliminar
-              </button>
-            </mat-menu>
-          </td>
-        </tr>
+            <button mat-menu-item (click)="onEliminar(curso)">
+              <i class="bi bi-trash3-fill me-2"></i> Eliminar
+            </button>
+          </mat-menu>
+        </td>
+      </tr>
 
-        <tr *ngIf="cursosFiltrados.length === 0">
-          <td colspan="10" class="empty-state">
-            <i class="bi bi-book-half"></i>
-            <p>No se encontraron cursos</p>
-          </td>
-        </tr>
+      <tr *ngIf="cursosFiltrados.length === 0">
+        <td colspan="8" class="empty-state">
+          <i class="bi bi-book-half"></i>
+          <p>No se encontraron cursos</p>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

@@ -6,9 +6,9 @@ import { CursoService } from '../../services/curso.service';
 
 interface CursoItem {
   id: string;
-  actividadId: string;  // ← añadir
+  actividadId: string;
   nombre: string;
-  nombreActividad: string;  // ← para mostrar contexto en el dialog
+  nombreActividad: string;
 }
 
 @Component({
@@ -24,24 +24,38 @@ export class CursosMember implements OnInit {
 
   cursos: CursoItem[] = [];
   apuntados = new Set<string>();
+  cursosActualesNombres: string[] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { cursosActuales: string[] }) {
-    if (data?.cursosActuales) {
-      data.cursosActuales.forEach(id => this.apuntados.add(id));
-    }
+    this.cursosActualesNombres = data?.cursosActuales ?? [];
   }
 
   ngOnInit(): void {
     this.cursoService.getActividades().subscribe((actividades: any[]) => {
       this.cursos = actividades.flatMap((a: any) =>
         (a.cursos ?? []).map((c: any) => ({
-          id:              c.id             ?? '',
-          actividadId:     a.id             ?? '',  // ← añadir
-          nombre:          c.nombre_curso   ?? '',
-          nombreActividad: a.nombre_actividad ?? '',
+          id:              c.id              ?? '',
+          actividadId:     a.id              ?? '',
+          nombre:          c.nombreCurso     ?? c.nombre_curso ?? '',
+          nombreActividad: a.nombreActividad ?? a.nombre_actividad ?? '',
         }))
       );
+
+      // Pre-marcar como apuntados los cursos que ya tiene el socio (match por nombre)
+      this.cursos.forEach(c => {
+        if (this.cursosActualesNombres.includes(c.nombre)) {
+          this.apuntados.add(c.id);
+        }
+      });
     });
+  }
+
+  estaApuntado(curso: CursoItem): boolean {
+    return this.apuntados.has(curso.id);
+  }
+
+  yaEstabaApuntado(curso: CursoItem): boolean {
+    return this.cursosActualesNombres.includes(curso.nombre);
   }
 
   toggleCurso(curso: CursoItem): void {
@@ -52,18 +66,14 @@ export class CursosMember implements OnInit {
     }
   }
 
-  estaApuntado(curso: CursoItem): boolean {
-    return this.apuntados.has(curso.id);
-  }
-
   close(): void {
     this.dialogRef.close(null);
   }
 
   guardar(): void {
-    // Devuelve array de objetos con actividadId y cursoId
+    // Solo devuelve inscripciones nuevas (no las que ya tenía)
     const inscripciones = this.cursos
-      .filter(c => this.apuntados.has(c.id))
+      .filter(c => this.apuntados.has(c.id) && !this.yaEstabaApuntado(c))
       .map(c => ({ actividadId: c.actividadId, cursoId: c.id }));
 
     this.dialogRef.close(inscripciones);
